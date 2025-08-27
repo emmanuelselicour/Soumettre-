@@ -1,149 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panneau Admin - Soumissions</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1828/1828778.png">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Admin - Soumissions</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="admin.js"></script>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
+  <main id="admin">
+    <h1>Panneau d'administration</h1>
 
-  <!-- Mot de passe -->
-  <div id="loginScreen" class="h-screen flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-md w-96 text-center">
-      <h1 class="text-2xl font-bold mb-4">Connexion Admin</h1>
-      <input id="password" type="password" placeholder="Mot de passe"
-             class="border p-2 w-full rounded mb-3" />
-      <button onclick="login()"
-              class="bg-blue-600 text-white px-4 py-2 rounded w-full">Se connecter</button>
-      <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden">Mot de passe incorrect</p>
-    </div>
-  </div>
-
-  <!-- Panel -->
-  <div id="adminPanel" class="hidden p-6">
-    <h2 class="text-2xl font-bold mb-4">📋 Liste des soumissions</h2>
-
-    <!-- Barre outils -->
-    <div class="flex gap-2 mb-4">
-      <input id="searchInput" type="text" placeholder="Rechercher par nom ou numéro"
-             class="border p-2 rounded flex-1">
-      <button onclick="downloadCSV()"
-              class="bg-green-600 text-white px-3 py-2 rounded">Télécharger CSV</button>
-      <button onclick="deleteSelected()"
-              class="bg-red-600 text-white px-3 py-2 rounded">Supprimer sélection</button>
+    <div id="login">
+      <input type="password" id="password" placeholder="Mot de passe admin">
+      <button onclick="checkPassword()">Se connecter</button>
+      <p id="error" style="color:red;"></p>
     </div>
 
-    <!-- Tableau -->
-    <div class="overflow-x-auto bg-white shadow rounded-lg">
-      <table id="submissionsTable" class="w-full border-collapse">
-        <thead class="bg-gray-200">
+    <div id="panel" style="display:none;">
+      <input type="text" id="search" placeholder="Rechercher par nom ou numéro" onkeyup="searchData()">
+
+      <table>
+        <thead>
           <tr>
-            <th class="p-2 border"><input type="checkbox" id="selectAll"></th>
-            <th class="p-2 border">Nom & Prénom</th>
-            <th class="p-2 border">Numéro</th>
-            <th class="p-2 border">Email</th>
-            <th class="p-2 border">Action</th>
+            <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Numéro</th>
+            <th>Email</th>
+            <th>Photo</th>
+            <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td colspan="5" class="p-3 text-center">Chargement...</td></tr>
-        </tbody>
+        <tbody id="data"></tbody>
       </table>
+
+      <div class="actions">
+        <button onclick="deleteSelected()">🗑 Supprimer sélectionnés</button>
+        <button onclick="downloadCSV()">⬇ Télécharger CSV</button>
+      </div>
     </div>
-  </div>
-
-  <script>
-    const ADMIN_PASSWORD = "04004749";
-
-    function login() {
-      const pwd = document.getElementById("password").value;
-      if (pwd === ADMIN_PASSWORD) {
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("adminPanel").classList.remove("hidden");
-        fetchSubmissions();
-      } else {
-        document.getElementById("errorMsg").classList.remove("hidden");
-      }
-    }
-
-    async function fetchSubmissions() {
-      try {
-        const res = await fetch("/.netlify/functions/list-submissions");
-        const data = await res.json();
-
-        const tbody = document.querySelector("#submissionsTable tbody");
-        tbody.innerHTML = "";
-
-        if (data && Array.isArray(data)) {
-          data.forEach((s, index) => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td class="border p-2 text-center"><input type="checkbox" class="rowCheckbox"></td>
-              <td class="border p-2">${s.data["Nom"] || ""} ${s.data["Prénom"] || ""}</td>
-              <td class="border p-2">${s.data["Numéro"] || ""}</td>
-              <td class="border p-2">${s.data["email"] || ""}</td>
-              <td class="border p-2">
-                <button onclick="deleteOne(${index})"
-                        class="bg-red-500 text-white px-2 py-1 rounded text-sm">Supprimer</button>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        } else {
-          tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center">Aucune soumission trouvée</td></tr>`;
-        }
-      } catch (err) {
-        console.error("Erreur :", err);
-      }
-    }
-
-    // Recherche
-    document.getElementById("searchInput").addEventListener("input", function () {
-      const value = this.value.toLowerCase();
-      document.querySelectorAll("#submissionsTable tbody tr").forEach(tr => {
-        tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
-      });
-    });
-
-    // Télécharger CSV
-    function downloadCSV() {
-      const rows = [["Nom Prénom", "Numéro", "Email"]];
-      document.querySelectorAll("#submissionsTable tbody tr").forEach(tr => {
-        const cols = tr.querySelectorAll("td");
-        if (cols.length >= 4) {
-          rows.push([
-            cols[1].innerText.trim(),
-            cols[2].innerText.trim(),
-            cols[3].innerText.trim()
-          ]);
-        }
-      });
-
-      let csvContent = rows.map(e => e.join(",")).join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "soumissions.csv";
-      link.click();
-    }
-
-    // Suppression placeholders
-    function deleteOne(index) {
-      alert("🚧 Suppression d’une seule entrée (API à brancher)");
-    }
-
-    function deleteSelected() {
-      alert("🚧 Suppression multiple (API à brancher)");
-    }
-
-    // Sélection globale
-    document.addEventListener("change", (e) => {
-      if (e.target.id === "selectAll") {
-        document.querySelectorAll(".rowCheckbox").forEach(cb => cb.checked = e.target.checked);
-      }
-    });
-  </script>
+  </main>
 </body>
 </html>
