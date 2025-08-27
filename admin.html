@@ -1,44 +1,145 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EDS — Admin</title>
-<link rel="icon" href="https://files.catbox.moe/rusj7l.jpg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - EDS Broadcast</title>
 <style>
-:root{--bg:#f6f9fc;--accent:#0066ff}
-*{box-sizing:border-box}
-body{font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:var(--bg);margin:0;padding:20px}
-.card{background:white;padding:16px;border-radius:12px;box-shadow:0 6px 20px rgba(8,15,33,0.06)}
-.top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
-input[type=password]{padding:8px;border-radius:8px;border:1px solid #e6eef8}
-button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white}
-.controls{display:flex;gap:8px;align-items:center}
-.table{width:100%;border-collapse:collapse;margin-top:12px}
-.table th,.table td{padding:8px;border-bottom:1px solid #eef6ff;text-align:left}
-.muted{color:#64748b;font-size:13px}
-.small{font-size:13px}
-.hidden{display:none}
+    body { font-family: Arial; background: #f4f4f9; margin:0; padding:0; }
+    .login-container, .admin-container { max-width:900px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+    input[type="password"], input[type="text"] { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
+    button { padding:10px 20px; border:none; border-radius:5px; background:#1e1e2f; color:#fff; cursor:pointer; margin-right:10px; }
+    table { width:100%; border-collapse: collapse; margin-top:20px; }
+    th, td { padding:10px; border:1px solid #ccc; text-align:left; }
+    th { background:#1e1e2f; color:#fff; }
+    input[type="checkbox"]{ transform: scale(1.2); }
+    #search { margin-top: 20px; padding: 10px; width: 100%; border-radius:5px; border:1px solid #ccc; }
 </style>
 </head>
 <body>
 
-
-<div class="card">
-<div class="top">
-<div>
-<h2 style="margin:0">Admin EDS</h2>
-<div class="muted">Gérer les inscriptions / fichiers / contacts</div>
+<div class="login-container" id="loginContainer">
+    <h2>Accès Admin - EDS Broadcast</h2>
+    <p>Entrez le mot de passe pour accéder à la page admin :</p>
+    <input type="password" id="adminPassword" placeholder="Mot de passe">
+    <button onclick="loginAdmin()">Se connecter</button>
 </div>
 
+<div class="admin-container" id="adminContainer" style="display:none;">
+    <h2>Tableau des soumissions</h2>
 
-<div style="display:flex;gap:8px;align-items:center">
-<label for="admin-pass" class="small muted">Mot de passe admin</label>
-<div style="position:relative">
-<input id="admin-pass" type="password" placeholder="••••••••" aria-label="password">
-<button id="eye-btn" style="position:absolute;right:4px;top:4px;padding:4px;background:transparent;border:none;cursor:pointer">👁️</button>
-</div>
-<button id="login-btn">Se connecter</button>
-</div>
+    <input type="text" id="search" placeholder="Rechercher par Nom, Prénom ou WhatsApp" onkeyup="filterTable()">
+
+    <table id="submissionsTable">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>WhatsApp</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <button onclick="deleteSelected()">Supprimer contacts sélectionnés</button>
+    <button onclick="downloadCSV()">Télécharger contacts</button>
 </div>
 
+<script>
+const adminPass = "04004749";
+const deletionPass = "04004";
+let submissions = []; // données récupérées depuis submissions.json ou API
+
+async function loginAdmin(){
+    const pass = document.getElementById("adminPassword").value;
+    if(pass !== adminPass){ alert("Mot de passe incorrect !"); return; }
+    document.getElementById("loginContainer").style.display="none";
+    document.getElementById("adminContainer").style.display="block";
+
+    // Récupérer les soumissions depuis un fichier JSON ou API
+    try{
+        const res = await fetch("submissions.json"); // créer un fichier submissions.json depuis l'export Netlify CSV → JSON
+        submissions = await res.json();
+        renderTable();
+    } catch(err){
+        alert("Impossible de récupérer les soumissions !");
+        console.error(err);
+    }
+}
+
+function renderTable(){
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML="";
+    submissions.forEach((s,index)=>{
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><input type="checkbox" class="selectCheckbox" data-index="${index}"></td>
+            <td>${s.nom}</td>
+            <td>${s.prenom}</td>
+            <td>${s.whatsapp}</td>
+            <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function deleteSingle(index){
+    const pass = prompt("Mot de passe pour supprimer ce contact:");
+    if(pass!==deletionPass){ alert("Mot de passe incorrect ! Suppression refusée."); return; }
+    submissions.splice(index,1);
+    renderTable();
+}
+
+function toggleAll(source){
+    document.querySelectorAll(".selectCheckbox").forEach(cb=>cb.checked=source.checked);
+}
+
+function deleteSelected(){
+    const pass = prompt("Mot de passe pour supprimer contacts sélectionnés:");
+    if(pass!==deletionPass){ alert("Mot de passe incorrect !"); return; }
+    const indexesToDelete=[];
+    document.querySelectorAll(".selectCheckbox").forEach(cb=>{
+        if(cb.checked) indexesToDelete.push(parseInt(cb.dataset.index));
+    });
+    indexesToDelete.sort((a,b)=>b-a).forEach(i=>submissions.splice(i,1));
+    renderTable();
+}
+
+function filterTable(){
+    const search = document.getElementById("search").value.toLowerCase();
+    const tbody=document.getElementById("tableBody");
+    tbody.innerHTML="";
+    submissions.forEach((s,index)=>{
+        if(s.nom.toLowerCase().includes(search) || s.prenom.toLowerCase().includes(search) || s.whatsapp.includes(search)){
+            const row=document.createElement("tr");
+            row.innerHTML=`
+                <td><input type="checkbox" class="selectCheckbox" data-index="${index}"></td>
+                <td>${s.nom}</td>
+                <td>${s.prenom}</td>
+                <td>${s.whatsapp}</td>
+                <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
+            `;
+            tbody.appendChild(row);
+        }
+    });
+}
+
+// Générer CSV pour téléchargement
+function downloadCSV(){
+    if(submissions.length===0){ alert("Aucune soumission à télécharger."); return; }
+    let csv="Nom,Prénom,WhatsApp\n";
+    submissions.forEach(s=>{ csv+=`${s.nom},${s.prenom},${s.whatsapp}\n`; });
+    const blob = new Blob([csv], {type:"text/csv"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;
+    a.download="contacts_eds.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
