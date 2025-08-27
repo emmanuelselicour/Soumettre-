@@ -1,44 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin - Soumissions</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="admin.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - EDS</title>
+  <link rel="icon" href="https://files.catbox.moe/rusj7l.jpg" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main id="admin">
-    <h1>Panneau d'administration</h1>
-
-    <div id="login">
-      <input type="password" id="password" placeholder="Mot de passe admin">
-      <button onclick="checkPassword()">Se connecter</button>
-      <p id="error" style="color:red;"></p>
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="https://files.catbox.moe/rusj7l.jpg" alt="Logo EDS" class="logo-img">
+      <h1>Admin - Inscriptions</h1>
     </div>
+  </header>
 
-    <div id="panel" style="display:none;">
-      <input type="text" id="search" placeholder="Rechercher par nom ou numéro" onkeyup="searchData()">
+  <main class="container admin-container">
+    <section class="admin-controls card">
+      <div class="controls-row">
+        <input id="search" type="search" placeholder="Rechercher (nom, prénom, whatsapp)..." />
+        <button id="refreshBtn" class="btn">Rafraîchir</button>
+        <button id="exportCsvBtn" class="btn">Exporter CSV</button>
+        <button id="downloadFilesBtn" class="btn">Télécharger tous les fichiers (ZIP)</button>
+        <button id="copyNumbersBtn" class="btn">Copier tous les numéros</button>
+      </div>
 
+      <div class="danger-row">
+        <input id="adminPass" type="password" placeholder="Mot de passe admin pour actions sensibles" />
+        <button id="toggleEye" class="eye-btn" title="Afficher / cacher"><span>👁️</span></button>
+        <button id="deleteAllBtn" class="btn-danger">Supprimer toutes les entrées</button>
+        <p class="small">Avant toute suppression, entre ton mot de passe admin (et clique l'œil pour voir/cacher)</p>
+      </div>
+    </section>
+
+    <section class="table-wrap card">
       <table>
         <thead>
           <tr>
-            <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
             <th>Nom</th>
             <th>Prénom</th>
-            <th>Numéro</th>
-            <th>Email</th>
-            <th>Photo</th>
+            <th>WhatsApp</th>
+            <th>Fichiers</th>
+            <th>Date</th>
             <th>Action</th>
           </tr>
         </thead>
-        <tbody id="data"></tbody>
+        <tbody id="userTable">
+          <!-- remplissage par admin.js -->
+        </tbody>
       </table>
-
-      <div class="actions">
-        <button onclick="deleteSelected()">🗑 Supprimer sélectionnés</button>
-        <button onclick="downloadCSV()">⬇ Télécharger CSV</button>
-      </div>
-    </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <p>SITE CODER PAR : TRUE-MANNO</p>
+  </footer>
+
+  <div class="bulbes" aria-hidden="true"></div>
+
+  <!-- JSZip pour zipper les fichiers -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="admin.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
