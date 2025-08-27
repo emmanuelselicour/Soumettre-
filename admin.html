@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>EDS PROGRAM EBROADCAST - Admin</title>
+  <!-- 🔹 Favicon -->
+  <link rel="icon" type="image/jpeg" href="https://files.catbox.moe/rusj7l.jpg">
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -46,11 +49,17 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      table-layout: fixed; /* Pour limiter la largeur des colonnes */
+      word-wrap: break-word; /* Pour casser les mots longs */
     }
     th, td {
       border: 1px solid #ddd;
       padding: 10px;
       text-align: center;
+      max-width: 150px; /* Limite la largeur des colonnes */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     th { background: #2c3e50; color: white; }
     tr:nth-child(even) { background: #f9f9f9; }
@@ -134,9 +143,9 @@
         const row = document.createElement("tr");
         row.innerHTML = `
           <td><input type="checkbox" data-index="${index}"></td>
-          <td>${c.nom}</td>
-          <td>${c.prenom}</td>
-          <td>${c.numero}</td>
+          <td title="${c.nom}">${c.nom}</td>
+          <td title="${c.prenom}">${c.prenom}</td>
+          <td title="${c.numero}">${c.numero}</td>
         `;
         table.appendChild(row);
       });
