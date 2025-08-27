@@ -1,59 +1,95 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f9fafb;
-  color: #333;
+:root{
+  --bg:#fbfdff;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --accent:#0d6efd;
+  --accent-dark:#0553c7;
+  --success:#00b894;
+  --danger:#e74c3c;
 }
-header, footer {
-  background: #2563eb;
-  color: white;
-  text-align: center;
-  padding: 15px;
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+  color:#111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+  overflow-x:hidden;
 }
-form, .merci, #panel {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+.site-header{
+  background: rgba(255,255,255,0.9);
+  border-bottom:1px solid #eef2f7;
+  padding:14px 20px;
+  position:sticky;
+  top:0;
+  z-index:40;
 }
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
+.header-inner{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  max-width:1100px;
+  margin:0 auto;
 }
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.logo-img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+.logo-img-large{width:90px;height:90px;border-radius:12px}
+
+.container{max-width:1100px;margin:32px auto;padding:0 18px}
+.card{background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,0.05);padding:22px;margin-bottom:18px}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:center}
+.hero-left h2{font-size:1.6rem;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 12px}
+.features{list-style:none;padding:0;margin:8px 0 0;color:var(--muted)}
+.features li{margin-bottom:6px}
+
+/* form styles */
+.form-card{display:flex;flex-direction:column;gap:10px}
+.form-card label{font-size:0.9rem;color:var(--muted)}
+.form-card input[type="text"],
+.form-card input[type="tel"],
+.form-card input[type="file"],
+.form-card input[type="password"],
+.form-card input[type="search"]{
+  padding:10px;border-radius:10px;border:1px solid #e6eef8;background:#fbfdff;
+  font-size:0.95rem;outline:none;
 }
-button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 15px;
+.form-card input:focus{box-shadow:0 0 0 4px rgba(13,110,253,0.06);border-color:var(--accent)}
+.btn-primary{background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn-primary:hover{opacity:0.95}
+.btn{background:#f1f5f9;border:1px solid #e6eef8;padding:8px 10px;border-radius:8px;cursor:pointer}
+.btn-danger{background:var(--danger);color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+.eye-btn{background:#fff;border:1px solid #e6eef8;padding:8px;border-radius:8px;cursor:pointer}
+
+/* admin */
+.admin-container .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.danger-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.table-wrap table{width:100%;border-collapse:collapse}
+.table-wrap th,.table-wrap td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left;font-size:0.95rem}
+.table-wrap a{color:var(--accent)}
+
+/* merci page */
+.merci-page{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;gap:12px}
+
+/* footer */
+.site-footer{padding:18px;text-align:center;background:#07122b;color:#fff;position:relative;z-index:20;border-top:1px solid rgba(255,255,255,0.04)}
+
+/* bulbes */
+.bulbes{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.bulbe{position:absolute;border-radius:50%;filter:blur(6px);opacity:0.9;mix-blend-mode:screen;animation:rise 10s linear forwards}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  100%{transform:translateY(-120vh) scale(0.6);opacity:0}
 }
-button:hover {
-  background: #1d4ed8;
+
+/* responsive */
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr; padding:10px}
+  .hero-right{order:-1}
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-table th, table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-table th {
-  background: #f3f4f6;
-}
-.actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-}
+.small{color:var(--muted);font-size:0.9rem}
