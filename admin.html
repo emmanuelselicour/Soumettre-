@@ -1,28 +1,231 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Lis soumèt yo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Administrateur</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+        
+        .admin-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .submissions {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .error {
+            color: red;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-  <h1>Lis soumèt itilizatè yo</h1>
-  <ul id="listSubmissions"></ul>
+    <div class="admin-container">
+        <h1>Espace Administrateur</h1>
+        
+        <div class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" required>
+            </div>
+            <button onclick="checkPassword()">Se connecter</button>
+            <div class="error" id="errorMessage">Mot de passe incorrect</div>
+        </div>
+        
+        <div class="submissions" id="submissionsSection">
+            <h2>Soumissions récentes</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Photo</th>
+                    </tr>
+                </thead>
+                <tbody id="submissionsTable">
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+            
+            <a href="index.html" class="back-link">Retour au formulaire</a>
+        </div>
+    </div>
 
-  <script>
-    async function loadSubmissions() {
-      const res = await fetch('/.netlify/functions/get-submissions');
-      const data = await res.json();
-      const ul = document.getElementById('listSubmissions');
-      ul.innerHTML = '';
-      data.forEach(s => {
-        const li = document.createElement('li');
-        li.textContent = `${s.data.prenom} - ${s.data.email} - Foto: ${s.data.photo} - ${s.submitted_at}`;
-        ul.appendChild(li);
-      });
-    }
-
-    loadSubmissions();
-  </script>
+    <script>
+        // Mot de passe administrateur
+        const ADMIN_PASSWORD = "04004749";
+        
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginForm = document.getElementById('loginForm');
+            const submissionsSection = document.getElementById('submissionsSection');
+            
+            if (password === ADMIN_PASSWORD) {
+                loginForm.style.display = 'none';
+                submissionsSection.style.display = 'block';
+                loadSubmissions();
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+        
+        function loadSubmissions() {
+            // Dans un cas réel, on récupérerait les données depuis l'API Netlify
+            // Pour l'exemple, nous allons simuler des données
+            const submissions = [
+                {
+                    nom: "Dupont",
+                    prenom: "Marie",
+                    telephone: "01 23 45 67 89",
+                    email: "marie.dupont@example.com",
+                    photo: "photo1.jpg"
+                },
+                {
+                    nom: "Martin",
+                    prenom: "Pierre",
+                    telephone: "06 12 34 56 78",
+                    email: "pierre.martin@example.com",
+                    photo: "photo2.jpg"
+                }
+            ];
+            
+            const table = document.getElementById('submissionsTable');
+            table.innerHTML = '';
+            
+            submissions.forEach(sub => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sub.nom}</td>
+                    <td>${sub.prenom}</td>
+                    <td>${sub.telephone}</td>
+                    <td>${sub.email}</td>
+                    <td>${sub.photo}</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+    </script>
 </body>
 </html>
