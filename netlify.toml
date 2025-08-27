@@ -1,9 +1,0 @@
-# Netlify configuration
-[build]
-  publish = "."
-
-# Optional: force “/admin” path to load admin.html
-[[redirects]]
-  from = "/admin"
-  to = "/admin.html"
-  status = 200
