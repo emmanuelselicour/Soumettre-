@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin • True-Manno</title>
+  <link rel="icon" href="https://files.catbox.moe/rusj7l.jpg"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bulb { position: fixed; bottom: -60px; width: 10px; height: 10px; border-radius: 9999px; opacity: .35; filter: blur(0.5px); animation: rise 6s linear forwards; pointer-events:none; }
+    @keyframes rise { to { transform: translateY(-120vh) scale(1.4); opacity:.05; } }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+  <div id="bulbs" aria-hidden="true"></div>
+  <header class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="https://files.catbox.moe/rusj7l.jpg" class="w-10 h-10 rounded-xl ring-2 ring-white/20"/>
+      <h1 class="text-xl md:text-2xl font-semibold tracking-tight">Admin • True-Manno</h1>
+    </div>
+    <a href="index.html" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20">Retour</a>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-20">
+    <!-- LOGIN -->
+    <section id="login" class="glass rounded-3xl p-6 md:p-8 soft-shadow">
+      <h2 class="text-xl font-semibold text-slate-100 mb-4">Connexion admin</h2>
+      <div class="grid md:grid-cols-[1fr_auto] gap-3 items-center">
+        <div class="relative">
+          <input id="pwd" type="password" placeholder="Mot de passe admin" class="w-full rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none pr-12"/>
+          <button type="button" id="togglePwd" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700 text-sm px-2 py-1 rounded-lg bg-white/80 ring-1 ring-slate-200">👁️</button>
+        </div>
+        <button id="enterBtn" class="px-5 py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-slate-900 font-semibold">Entrer</button>
+      </div>
+      <p class="text-slate-300 text-sm mt-2">Pour toute suppression, une confirmation du mot de passe sera redemandée.</p>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dash" class="hidden mt-8">
+      <div class="glass rounded-3xl p-6 md:p-8 soft-shadow">
+        <div class="flex flex-wrap items-center gap-3">
+          <input id="qName" placeholder="Recherche par nom/prénom" class="rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none"/>
+          <input id="qPhone" placeholder="Recherche par numéro" class="rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none"/>
+          <button id="refreshBtn" class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20">Rafraîchir</button>
+          <button id="exportCsv" class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20">Exporter CSV</button>
+          <button id="exportVcf" class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20">Exporter vCard (.vcf)</button>
+          <button id="deleteAll" class="px-4 py-3 rounded-2xl bg-rose-500/80 hover:bg-rose-500 text-slate-900 font-semibold">Supprimer tout</button>
+          <span class="ml-auto text-sm text-slate-300" id="count"></span>
+        </div>
+        <div class="overflow-x-auto mt-4">
+          <table class="min-w-full text-sm text-left">
+            <thead class="text-slate-300">
+              <tr>
+                <th class="px-3 py-2">#</th>
+                <th class="px-3 py-2">Nom</th>
+                <th class="px-3 py-2">Prénom</th>
+                <th class="px-3 py-2">WhatsApp</th>
+                <th class="px-3 py-2">Fichiers</th>
+                <th class="px-3 py-2">Date</th>
+                <th class="px-3 py-2">Action</th>
+              </tr>
+            </thead>
+            <tbody id="rows" class="divide-y divide-white/10"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-slate-400">
+    © <span id="year"></span> • Site codé par <strong>True-Manno</strong>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Background bulbs (same rate so le style reste cohérent)
+    const bulbsEl = document.getElementById('bulbs');
+    function spawnBulb() {
+      const b = document.createElement('span');
+      b.className = 'bulb';
+      const size = 6 + Math.random()*10;
+      b.style.width = size+'px'; b.style.height = size+'px';
+      b.style.left = Math.random()*100 + 'vw';
+      b.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,255,255,.1))';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(), 6500);
+    }
+    setInterval(()=>{ for(let i=0;i<9;i++) spawnBulb(); }, 1000);
+
+    // Config
+    const SITE_ID = "68ae6ed558338b00088302f7";
+    const NETLIFY_TOKEN = "nfp_15mLDnoA46wB94Bk8CP1irt7rHD2tYya7f29";
+    const ADMIN_PASSWORD = "04004749";
+    const FORM_NAME = "inscriptions";
+
+    // Login & eye toggle
+    const login = document.getElementById('login');
+    const dash = document.getElementById('dash');
+    const pwd = document.getElementById('pwd');
+    const togglePwd = document.getElementById('togglePwd');
+    const enterBtn = document.getElementById('enterBtn');
+
+    togglePwd.addEventListener('click', () => {
+      pwd.type = (pwd.type === 'password') ? 'text' : 'password';
+    });
+
+    enterBtn.addEventListener('click', () => {
+      if (pwd.value === ADMIN_PASSWORD) {
+        login.classList.add('hidden');
+        dash.classList.remove('hidden');
+        sessionStorage.setItem('tm_admin', '1');
+        loadData();
+      } else {
+        alert('Mot de passe incorrect.');
+      }
+    });
+
+    if (sessionStorage.getItem('tm_admin') === '1') {
+      login.classList.add('hidden');
+      dash.classList.remove('hidden');
+      loadData();
+    }
+
+    async function getFormId() {
+      const r = await fetch(`https://api.netlify.com/api/v1/sites/${SITE_ID}/forms`, { headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }});
+      const forms = await r.json();
+      const f = forms.find(x => x.name === FORM_NAME);
+      return f ? f.id : null;
+    }
+
+    let allSubs = [];
+    async function loadData() {
+      try {
+        const formId = await getFormId();
+        if (!formId) throw new Error('Form non trouvé');
+        const r = await fetch(`https://api.netlify.com/api/v1/forms/${formId}/submissions?per_page=1000`, { headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }});
+        allSubs = await r.json();
+        render(allSubs);
+      } catch(e) {
+        console.error(e);
+        alert('Erreur chargement des données (API Netlify).');
+      }
+    }
+
+    const rows = document.getElementById('rows');
+    const count = document.getElementById('count');
+    const qName = document.getElementById('qName');
+    const qPhone = document.getElementById('qPhone');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const exportCsv = document.getElementById('exportCsv');
+    const exportVcf = document.getElementById('exportVcf');
+    const deleteAllBtn = document.getElementById('deleteAll');
+
+    function normalizePhone(v) { return (v||'').replace(/\s+/g,'').replace(/[^+\d]/g,'').replace(/^00/,'+'); }
+
+    function render(list) {
+      const qn = (qName.value||'').toLowerCase();
+      const qp = normalizePhone(qPhone.value||'');
+      let filtered = list.filter(s => {
+        const d = s.data || {};
+        const nom = (d.nom||'').toLowerCase();
+        const prenom = (d.prenom||'').toLowerCase();
+        const phone = normalizePhone(d.numero||d.Numero||d.whatsapp||'');
+        const nameMatch = nom.includes(qn) || prenom.includes(qn);
+        const phoneMatch = qp ? phone.includes(qp) : true;
+        return nameMatch && phoneMatch;
+      });
+
+      rows.innerHTML = '';
+      filtered.forEach((s, i) => {
+        const d = s.data || {};
+        const phone = normalizePhone(d.numero||d.Numero||d.whatsapp||'');
+        const created = new Date(s.created_at).toLocaleString();
+        const atts = (s.attachments||[]).map(a => `<a class="underline" href="${a.url}" target="_blank">fichier</a>`).join(', ');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-3 py-2 text-slate-300">${i+1}</td>
+          <td class="px-3 py-2">${d.nom||''}</td>
+          <td class="px-3 py-2">${d.prenom||''}</td>
+          <td class="px-3 py-2 font-mono">${phone}</td>
+          <td class="px-3 py-2">${atts||'-'}</td>
+          <td class="px-3 py-2">${created}</td>
+          <td class="px-3 py-2">
+            <button data-id="${s.id}" class="del px-3 py-1 rounded-xl bg-rose-500/80 hover:bg-rose-500 text-slate-900">Supprimer</button>
+          </td>`;
+        rows.appendChild(tr);
+      });
+      count.textContent = filtered.length + ' enregistrements';
+    }
+
+    qName.addEventListener('input', () => render(allSubs));
+    qPhone.addEventListener('input', () => render(allSubs));
+    refreshBtn.addEventListener('click', loadData);
+
+    // Delete one
+    rows.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.del');
+      if (!btn) return;
+      const okPwd = prompt('Confirmez le mot de passe admin pour supprimer:');
+      if (okPwd !== ADMIN_PASSWORD) return alert('Mot de passe incorrect.');
+      const id = btn.getAttribute('data-id');
+      try {
+        const r = await fetch(`https://api.netlify.com/api/v1/submissions/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }
+        });
+        if (r.status === 204) { 
+          allSubs = allSubs.filter(x => x.id !== id);
+          render(allSubs);
+        } else {
+          alert('Suppression échouée.');
+        }
+      } catch(e) { console.error(e); alert('Erreur réseau.'); }
+    });
+
+    // Delete all
+    deleteAllBtn.addEventListener('click', async () => {
+      if (!confirm('Supprimer TOUTES les personnes ?')) return;
+      const okPwd = prompt('Confirmez le mot de passe admin:');
+      if (okPwd !== ADMIN_PASSWORD) return alert('Mot de passe incorrect.');
+      for (const s of allSubs) {
+        try { await fetch(`https://api.netlify.com/api/v1/submissions/${s.id}`, {
+          method:'DELETE', headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }
+        }) } catch(_e) { /* ignore */ }
+      }
+      allSubs = [];
+      render(allSubs);
+    });
+
+    function toCsv(items) {
+      const headers = ['nom','prenom','numero'];
+      const rows = items.map(s => {
+        const d = s.data || {};
+        return [d.nom||'', d.prenom||'', normalizePhone(d.numero||d.Numero||d.whatsapp||'')].map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',');
+      });
+      return [headers.join(','), ...rows].join('\n');
+    }
+
+    function toVcf(items) {
+      return items.map((s, idx) => {
+        const d = s.data || {};
+        const nom = (d.nom||'').toUpperCase();
+        const prenom = d.prenom||'';
+        const tel = normalizePhone(d.numero||d.Numero||d.whatsapp||'');
+        return `BEGIN:VCARD\nVERSION:3.0\nN:${nom};${prenom};;;\nFN:${prenom} ${nom}\nTEL;TYPE=CELL:${tel}\nEND:VCARD`;
+      }).join('\n');
+    }
+
+    function download(filename, text) {
+      const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+    }
+
+    exportCsv.addEventListener('click', () => {
+      download('contacts.csv', toCsv(allSubs));
+    });
+    exportVcf.addEventListener('click', () => {
+      download('contacts.vcf', toVcf(allSubs));
+    });
+  </script>
+</body>
+</html>
