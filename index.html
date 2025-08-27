@@ -1,102 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Programme Employeurs – Inscription</title>
-
-  <!-- Favicon (SVG inline en data:) -->
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect rx="14" width="64" height="64" fill="%232563eb"/><path d="M16 34c8 8 24 8 32 0" stroke="white" stroke-width="6" fill="none"/><circle cx="24" cy="24" r="4" fill="white"/><circle cx="40" cy="24" r="4" fill="white"/></svg>'>
-
-  <!-- Tailwind (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* petite touche glassmorphism */
-    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,.08); }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programme - Inscription</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
-  <header class="max-w-5xl mx-auto px-4 py-10">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-blue-600 grid place-items-center font-bold">P</div>
-        <h1 class="text-xl md:text-2xl font-semibold">Programme Employeurs</h1>
-      </div>
-      <a href="admin.html" class="text-sm underline/50 hover:underline">Admin</a>
-    </div>
+<body>
+  <header>
+    <h1>Formulaire d'inscription</h1>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 pb-20">
-    <section class="rounded-2xl p-[1px] bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-400 shadow-2xl">
-      <div class="rounded-2xl p-8 md:p-10 glass">
-        <div class="mb-8">
-          <h2 class="text-2xl md:text-3xl font-bold">Formulaire d’inscription</h2>
-          <p class="text-slate-300 mt-2">Remplissez vos informations. Vous recevrez un e-mail de confirmation automatique.</p>
-        </div>
+  <main>
+    <form name="inscription" method="POST" data-netlify="true" enctype="multipart/form-data" action="/merci.html">
+      <input type="hidden" name="form-name" value="inscription">
+      
+      <label>Nom :</label>
+      <input type="text" name="nom" required>
 
-        <!-- Formulaire Netlify -->
-        <form
-          name="employeur-inscription"
-          method="POST"
-          action="/merci.html"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          enctype="multipart/form-data"
-          class="grid md:grid-cols-2 gap-6"
-        >
-          <!-- champs cachés requis par Netlify Forms -->
-          <input type="hidden" name="form-name" value="employeur-inscription">
-          <p class="hidden">
-            <label>Ne pas remplir: <input name="bot-field" /></label>
-          </p>
+      <label>Prénom :</label>
+      <input type="text" name="prenom" required>
 
-          <div>
-            <label class="block text-sm mb-2">Nom</label>
-            <input name="nom" required class="w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dupont">
-          </div>
+      <label>Numéro :</label>
+      <input type="tel" name="numero" required>
 
-          <div>
-            <label class="block text-sm mb-2">Prénom</label>
-            <input name="prenom" required class="w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Marie">
-          </div>
+      <label>Email :</label>
+      <input type="email" name="email" required>
 
-          <div>
-            <label class="block text-sm mb-2">Numéro</label>
-            <input name="numero" required type="tel" class="w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="+509 12 34 56 78">
-          </div>
+      <label>Photo :</label>
+      <input type="file" name="photo" accept="image/*">
 
-          <div>
-            <label class="block text-sm mb-2">E-mail</label>
-            <input name="email" required type="email" class="w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="exemple@mail.com">
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="block text-sm mb-2">Photo (portrait)</label>
-            <input name="photo" type="file" accept="image/*" class="w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-2">
-            <p class="text-xs text-slate-400 mt-2">Formats acceptés: JPG/PNG. (Les fichiers sont stockés par Netlify avec la soumission)</p>
-          </div>
-
-          <div class="md:col-span-2 flex items-center gap-4">
-            <button class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-semibold">Soumettre</button>
-            <span class="text-slate-400 text-sm">En soumettant, vous acceptez le traitement de vos données pour ce programme.</span>
-          </div>
-        </form>
-      </div>
-    </section>
+      <button type="submit">Envoyer</button>
+    </form>
   </main>
 
-  <footer class="border-t border-slate-800/70">
-    <div class="max-w-5xl mx-auto px-4 py-8 text-sm text-slate-400 flex items-center justify-between">
-      <span>© <span id="y"></span> Programme Employeurs</span>
-      <nav class="flex gap-4">
-        <a href="#" class="hover:text-slate-200">Confidentialité</a>
-        <a href="#" class="hover:text-slate-200">Contact</a>
-      </nav>
-    </div>
+  <footer>
+    <p>© 2025 - Mon Programme | Tous droits réservés</p>
   </footer>
-
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
 </body>
 </html>
