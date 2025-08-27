@@ -1,0 +1,10 @@
+{
+  "name": "tcheck-site",
+  "version": "1.0.0",
+  "description": "Backend dependencies pou Netlify Functions",
+  "dependencies": {
+    "multiparty": "^4.2.2",
+    "@sendgrid/mail": "^7.9.0",
+    "node-fetch": "^2.6.12"
+  }
+}
