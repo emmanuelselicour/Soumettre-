@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Lis soumèt yo</title>
+</head>
+<body>
+  <h1>Lis soumèt itilizatè yo</h1>
+  <ul id="listSubmissions"></ul>
+
+  <script>
+    async function loadSubmissions() {
+      const res = await fetch('/.netlify/functions/get-submissions');
+      const data = await res.json();
+      const ul = document.getElementById('listSubmissions');
+      ul.innerHTML = '';
+      data.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = `${s.data.prenom} - ${s.data.email} - Foto: ${s.data.photo} - ${s.submitted_at}`;
+        ul.appendChild(li);
+      });
+    }
+
+    loadSubmissions();
+  </script>
+</body>
+</html>
