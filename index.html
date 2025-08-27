@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fòm Kontak ak Foto</title>
+</head>
+<body>
+  <h1>Fòm Kontak</h1>
+  <form id="contactForm" enctype="multipart/form-data">
+    <input type="text" name="prenom" placeholder="Prenom" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="file" name="photo" accept="image/*" required />
+    <button type="submit">Soumèt</button>
+  </form>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      const res = await fetch('/.netlify/functions/submit-form', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        window.location.href = '/thank-you.html';
+      } else {
+        alert('Gen yon erè: ' + result.error);
+      }
+    });
+  </script>
+</body>
+</html>
