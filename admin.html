@@ -1,153 +1,84 @@
-<!DOCTYPE html>
-<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - EDS Broadcast</title>
-<style>
-    body { font-family: Arial; background:#f4f4f9; margin:0; padding:0;}
-    .login-container, .admin-container { max-width:900px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-    input[type="password"], input[type="text"] { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
-    button { padding:10px 20px; border:none; border-radius:5px; background:#1e1e2f; color:#fff; cursor:pointer; margin-right:10px;}
-    table { width:100%; border-collapse: collapse; margin-top:20px; }
-    th, td { padding:10px; border:1px solid #ccc; text-align:left; }
-    th { background:#1e1e2f; color:#fff; }
-    input[type="checkbox"]{ transform: scale(1.2); }
-    #search { margin-top: 20px; padding: 10px; width: 100%; border-radius:5px; border:1px solid #ccc; }
-</style>
+  <meta charset="UTF-8">
+  <title>EDS PROGRAM EBROADCAST - Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    button { margin: 5px; padding: 8px 12px; }
+  </style>
 </head>
 <body>
+  <h1 style="text-align:center;">Admin - Contacts</h1>
 
-<div class="login-container" id="loginContainer">
-    <h2>Accès Admin - EDS Broadcast</h2>
-    <p>Entrez le mot de passe pour accéder à la page admin :</p>
-    <input type="password" id="adminPassword" placeholder="Mot de passe">
-    <button onclick="loginAdmin()">Se connecter</button>
-</div>
+  <div style="text-align:center;">
+    <button id="deleteSelected">Supprimer Sélection</button>
+    <button id="deleteAll">Supprimer Tout</button>
+    <button id="downloadContacts">Télécharger Contacts (CSV)</button>
+  </div>
 
-<div class="admin-container" id="adminContainer" style="display:none;">
-    <h2>Tableau des soumissions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Sélection</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Numéro WhatsApp</th>
+      </tr>
+    </thead>
+    <tbody id="contactTable"></tbody>
+  </table>
 
-    <input type="text" id="search" placeholder="Rechercher par Nom, Prénom ou WhatsApp" onkeyup="filterTable()">
+  <script>
+    let contacts = [
+      {nom:"Jean", prenom:"Pierre", numero:"50912345678"},
+      {nom:"Marie", prenom:"Claude", numero:"50998765432"}
+    ];
 
-    <table id="submissionsTable">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>WhatsApp</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
+    const table = document.getElementById("contactTable");
 
-    <button onclick="deleteSelected()">Supprimer contacts sélectionnés</button>
-    <button onclick="downloadCSV()">Télécharger contacts</button>
-</div>
-
-<script>
-const adminPass = "04004749"; // Mot de passe admin
-const deletionPass = "04004";  // Mot de passe pour suppression
-let submissions = [];
-
-// Connexion admin et récupération des soumissions
-async function loginAdmin(){
-    const pass = document.getElementById("adminPassword").value;
-    if(pass !== adminPass){ alert("Mot de passe incorrect !"); return; }
-    document.getElementById("loginContainer").style.display="none";
-    document.getElementById("adminContainer").style.display="block";
-
-    try{
-        const res = await fetch("/.netlify/functions/getSubmissions");
-        submissions = await res.json();
-        renderTable();
-    } catch(err){
-        alert("Impossible de récupérer les soumissions !");
-        console.error(err);
-    }
-}
-
-// Affichage du tableau
-function renderTable(){
-    const tbody = document.getElementById("tableBody");
-    tbody.innerHTML="";
-    submissions.forEach((s,index)=>{
+    function renderContacts(){
+      table.innerHTML = "";
+      contacts.forEach((c, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><input type="checkbox" class="selectCheckbox" data-index="${index}"></td>
-            <td>${s.nom}</td>
-            <td>${s.prenom}</td>
-            <td>${s.whatsapp}</td>
-            <td>${new Date(s.submitted_at).toLocaleString()}</td>
-            <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
+          <td><input type="checkbox" data-index="${index}"></td>
+          <td>${c.nom}</td>
+          <td>${c.prenom}</td>
+          <td>${c.numero}</td>
         `;
-        tbody.appendChild(row);
+        table.appendChild(row);
+      });
+    }
+
+    document.getElementById("deleteSelected").addEventListener("click", function(){
+      const checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+      const toDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+      contacts = contacts.filter((_, i) => !toDelete.includes(i));
+      renderContacts();
     });
-}
 
-// Supprimer un contact
-function deleteSingle(index){
-    const pass = prompt("Mot de passe pour supprimer ce contact:");
-    if(pass!==deletionPass){ alert("Mot de passe incorrect ! Suppression refusée."); return; }
-    submissions.splice(index,1);
-    renderTable();
-}
-
-// Sélectionner / désélectionner tous
-function toggleAll(source){
-    document.querySelectorAll(".selectCheckbox").forEach(cb=>cb.checked=source.checked);
-}
-
-// Supprimer contacts sélectionnés
-function deleteSelected(){
-    const pass = prompt("Mot de passe pour supprimer contacts sélectionnés:");
-    if(pass!==deletionPass){ alert("Mot de passe incorrect !"); return; }
-    const indexesToDelete=[];
-    document.querySelectorAll(".selectCheckbox").forEach(cb=>{
-        if(cb.checked) indexesToDelete.push(parseInt(cb.dataset.index));
+    document.getElementById("deleteAll").addEventListener("click", function(){
+      if(confirm("Voulez-vous vraiment supprimer TOUS les contacts ?")){
+        contacts = [];
+        renderContacts();
+      }
     });
-    indexesToDelete.sort((a,b)=>b-a).forEach(i=>submissions.splice(i,1));
-    renderTable();
-}
 
-// Filtrer le tableau
-function filterTable(){
-    const search = document.getElementById("search").value.toLowerCase();
-    const tbody=document.getElementById("tableBody");
-    tbody.innerHTML="";
-    submissions.forEach((s,index)=>{
-        if(s.nom.toLowerCase().includes(search) || s.prenom.toLowerCase().includes(search) || s.whatsapp.includes(search)){
-            const row=document.createElement("tr");
-            row.innerHTML=`
-                <td><input type="checkbox" class="selectCheckbox" data-index="${index}"></td>
-                <td>${s.nom}</td>
-                <td>${s.prenom}</td>
-                <td>${s.whatsapp}</td>
-                <td>${new Date(s.submitted_at).toLocaleString()}</td>
-                <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
-            `;
-            tbody.appendChild(row);
-        }
+    document.getElementById("downloadContacts").addEventListener("click", function(){
+      let csv = "Nom,Prénom,Numéro WhatsApp\n";
+      contacts.forEach(c => {
+        csv += `${c.nom},${c.prenom},${c.numero}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "contacts.csv";
+      a.click();
+      URL.revokeObjectURL(url);
     });
-}
 
-// Télécharger CSV
-function downloadCSV(){
-    if(submissions.length===0){ alert("Aucune soumission à télécharger."); return; }
-    let csv="Nom,Prénom,WhatsApp,Date\n";
-    submissions.forEach(s=>{ csv+=`${s.nom},${s.prenom},${s.whatsapp},${s.submitted_at}\n`; });
-    const blob = new Blob([csv], {type:"text/csv"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href=url;
-    a.download="contacts_eds.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-}
-</script>
-
+    renderContacts();
+  </script>
 </body>
-</html>
