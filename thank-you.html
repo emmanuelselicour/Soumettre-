@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Merci • True-Manno</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .pop { animation: pop 0.6s ease forwards; transform: scale(.9); opacity:0; }
+    @keyframes pop { to { transform: scale(1); opacity:1; } }
+  </style>
+</head>
+<body class="min-h-screen grid place-items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+  <div class="max-w-xl text-center p-8 rounded-3xl bg-white/10 backdrop-blur-md ring-1 ring-white/10 pop">
+    <h1 class="text-3xl font-bold">Merci 🙏</h1>
+    <p class="mt-2 text-slate-300">Votre demande a bien été envoyée. Nous revenons vers vous très vite.</p>
+    <div class="mt-6 flex justify-center gap-3">
+      <a href="/index.html" class="px-5 py-3 rounded-2xl bg-white text-slate-900 font-semibold">Retour à l’accueil</a>
+      <a href="admin.html" class="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20">Aller à l’admin</a>
+    </div>
+  </div>
+</body>
+</html>
