@@ -1,5 +1,5 @@
 // netlify/functions/getSubmissions.js
-const fetch = require('node-fetch'); // Node 18+ : fetch est global, sinon installer node-fetch
+// Plus besoin de require('node-fetch'), fetch est natif sur Node 18+
 
 exports.handler = async function(event, context) {
     const NETLIFY_API_TOKEN = "nfp_PUrabHFkXjtTHDnc15EDCjfCz1KCp7pXbc9b"; // Ton API token
@@ -17,12 +17,14 @@ exports.handler = async function(event, context) {
             headers: { "Authorization": `Bearer ${NETLIFY_API_TOKEN}` }
         });
         const data = await res.json();
+
         const submissions = data.map(sub => ({
             nom: sub.data.nom || "",
             prenom: sub.data.prenom || "",
             whatsapp: sub.data.whatsapp || "",
             submitted_at: sub.submitted_at
         }));
+
         return { statusCode: 200, body: JSON.stringify(submissions) };
     } catch (err) {
         return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
