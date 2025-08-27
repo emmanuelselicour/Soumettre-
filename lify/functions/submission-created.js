@@ -1,12 +1,16 @@
-// Trigger: form submission created
-// File name must be submission-created.js for Netlify background event
+// netlify/functions/submission-created.js
+// Cette fonction est déclenchée par Netlify lorsqu'une soumission est créée.
+// Elle envoie un e-mail de remerciement via Resend (ou autre provider si tu modifies).
+
 import fetch from "node-fetch";
 
 export const handler = async (event) => {
   try {
-    const { payload } = JSON.parse(event.body || "{}"); // event.payload in older runtimes
-    // Compat: parfois c'est event.body, parfois event.Records… selon runtime
+    // Netlify Events : payload peut être dans event.body
+    const body = event.body ? JSON.parse(event.body) : {};
+    const payload = body.payload || body;
     const data = payload?.data || {};
+
     const nom = data.nom || "";
     const prenom = data.prenom || "";
     const numero = data.numero || "";
@@ -14,8 +18,10 @@ export const handler = async (event) => {
 
     if (!email) return { statusCode: 200, body: "No email provided, skip." };
 
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    // RESEND API KEY must be set in env for production
+    const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
     const FROM_EMAIL = process.env.FROM_EMAIL || "no-reply@example.com";
+
     if (!RESEND_API_KEY) {
       console.warn("RESEND_API_KEY missing: skip email.");
       return { statusCode: 200, body: "No RESEND_API_KEY, email skipped" };
