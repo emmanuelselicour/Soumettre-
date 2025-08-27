@@ -1,5 +1,5 @@
 const API_TOKEN = "nfp_15mLDnoA46wB94Bk8CP1irt7rHD2tYya7f29"; // Ton token Netlify
-const FORM_ID = "68ae648c5501c20008ac0398"; // 👉 À coller après déploiement
+const FORM_ID = "68ae6ed558338b00088302f7"; // 👉 À coller après déploiement
 
 async function checkPassword() {
   const pass = document.getElementById("password").value;
