@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EDS — Augmentez vos vues WhatsApp</title>
+    <link rel="icon" href="https://files.catbox.moe/rusj7l.jpg" />
+    <meta name="description" content="EDS — service d'augmentation de vues / clients pour WhatsApp, ventes d'abonnements et services médias sociaux." />
+    <style>
+      :root{--accent:#0d9488;--muted:#f3f4f6;--card:#ffffff}
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background:linear-gradient(180deg,#fbfbff 0%, #f7fafc 100%);color:#0f172a}
+      header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px}
+      .brand{display:flex;align-items:center;gap:12px}
+      .brand img{width:48px;height:48px;border-radius:8px}
+      nav a{margin-left:14px;text-decoration:none;color:inherit;font-weight:600}
+      main{max-width:980px;margin:18px auto;padding:20px}
+      .hero{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:center}
+      .card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 6px 20px rgba(15,23,42,0.06)}
+      .bulbs{display:flex;gap:8px;align-items:center}
+      .bulb{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff, var(--accent));box-shadow:0 0 10px rgba(13,148,136,0.6);opacity:0.95;animation:pulse 0.111s infinite}
+      @keyframes pulse{0%{transform:scale(.85);filter:brightness(0.9)}50%{transform:scale(1.15);filter:brightness(1.2)}100%{transform:scale(.85);filter:brightness(0.9)}}
+      form label{display:block;margin-top:12px;font-weight:600}
+      input[type=text], input[type=file], textarea{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6e9ee}
+      .actions{display:flex;gap:10px;margin-top:14px}
+      button{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:0;font-weight:700}
+      footer{text-align:center;padding:18px;margin-top:30px;color:#667085}
+      @media(max-width:880px){.hero{grid-template-columns:1fr}nav a{display:none}}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <img src="https://files.catbox.moe/rusj7l.jpg" alt="logo" />
+        <div>
+          <div style="font-weight:800">EDS</div>
+          <div style="font-size:12px;color:#475569">Boostez vos vues & clients WhatsApp</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#">accueil</a>
+        <a href="https://easy-deal-shop.netlify.app/" target="_blank">visiter notre boutique</a>
+        <a href="#admin">admin</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="card">
+            <h1>Obtenez plus de vues et clients sur WhatsApp</h1>
+            <p>Vous avez un business ? on vous aide à attirer plus de clients sans forcer : abonnements, followers (IG/Facebook/TikTok), diamants Free Fire, Netflix, etc. Services humains et paiement sécurisé.</p>
+            <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+              <div class="bulbs">
+                <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+                <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+                <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+              </div>
+              <div style="font-size:13px;color:#475569">Animation: 9 bulbs/sec • <button id="slow-btn" style="background:#e2fdf7;color:#065f52;padding:6px 8px;border-radius:8px;border:0;cursor:pointer">ralentir</button></div>
+            </div>
+            <hr style="margin:14px 0"/>
+            <h3>Nos services</h3>
+            <ul>
+              <li>Augmentation de vues WhatsApp & gestion de campagnes</li>
+              <li>Vente d'abonnements & followers IG / FB / TikTok</li>
+              <li>Diamants Free Fire, abonnements Netflix, etc.</li>
+            </ul>
+            <p style="margin-top:12px;font-weight:700">Pourquoi nous ?</p>
+            <p>Des résultats rapides, prix compétitifs et assistance humaine. Nous aidons les petites entreprises à convertir visiteurs en clients via WhatsApp — plus de vues = plus d'opportunités.</p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h2>Formulaire rapide</h2>
+            <form name="eds-contact" method="POST" data-netlify="true" enctype="multipart/form-data" netlify-honeypot="bot-field" id="edsForm" action="/thankyou.html">
+              <input type="hidden" name="form-name" value="eds-contact" />
+              <input type="hidden" name="site_id" value="68ae6ed558338b00088302f7" />
+
+              <p hidden><label>ne pas remplir <input name="bot-field" /></label></p>
+
+              <label for="nom">Nom</label>
+              <input id="nom" name="nom" type="text" placeholder="Ton nom" required />
+
+              <label for="prenom">Prénom</label>
+              <input id="prenom" name="prenom" type="text" placeholder="Ton prénom" required />
+
+              <label for="whatsapp">Numéro WhatsApp</label>
+              <input id="whatsapp" name="whatsapp" type="text" placeholder="+509 38XX XXXX" required />
+
+              <label for="files">Joindre des fichiers (images, preuves, listes)</label>
+              <input id="files" name="files" type="file" multiple />
+
+              <label for="note">Note marketing / message</label>
+              <textarea id="note" name="message" rows="3" placeholder="Message pour nous (ex: besoin de 10k vues sur 7 jours)"></textarea>
+
+              <div style="margin-top:10px;">
+                <label>Ajout groupé de contacts (CSV)</label>
+                <input id="csv" type="file" accept="text/csv" />
+                <div style="font-size:12px;color:#64748b;margin-top:6px">Format CSV attendu: nom,prenom,whatsapp (ex: Jean,Paul,+50912345678)</div>
+                <button type="button" id="parseCsv" style="margin-top:8px;background:#0ea5a4">Importer CSV</button>
+                <button type="button" id="bulkSubmit" style="margin-top:8px;background:#06b6d4">Ajouter tous les contacts (en arrière-plan)</button>
+              </div>
+
+              <div class="actions">
+                <button type="submit">Envoyer</button>
+                <a href="https://easy-deal-shop.netlify.app/" target="_blank" style="text-decoration:none"><button type="button" style="background:#475569">Visiter boutique</button></a>
+              </div>
+            </form>
+
+            <iframe name="netlify-iframe" style="display:none"></iframe>
+
+            <div id="csvPreview" style="margin-top:12px;font-size:13px;color:#334155"></div>
+          </div>
+        </aside>
+      </section>
+
+      <footer>
+        <div>site codé par : true-manno</div>
+      </footer>
+    </main>
+
+    <script>
+      const slowBtn = document.getElementById('slow-btn')
+      let slowed = false
+      slowBtn.addEventListener('click', ()=>{
+        document.querySelectorAll('.bulb').forEach(b=>{ b.style.animationDuration = slowed? '0.111s':'0.6s' })
+        slowBtn.textContent = slowed? 'ralentir' : 'remettre rapide'
+        slowed = !slowed
+      })
+
+      document.getElementById('parseCsv').addEventListener('click', ()=>{
+        const f = document.getElementById('csv').files[0]
+        if(!f){ alert('choisis un fichier CSV') ; return }
+        const r = new FileReader()
+        r.onload = e => {
+          const txt = e.target.result
+          const lines = txt.split(/\r?\n/).filter(Boolean)
+          const rows = lines.map(l=>l.split(',').map(c=>c.trim()))
+          const html = rows.map(r=>`<div>${r[0]||''} ${r[1]||''} — ${r[2]||''}</div>`).join('')
+          document.getElementById('csvPreview').innerHTML = html
+          sessionStorage.setItem('eds_bulk_contacts', JSON.stringify(rows))
+        }
+        r.readAsText(f,'utf-8')
+      })
+
+      document.getElementById('bulkSubmit').addEventListener('click', async ()=>{
+        const raw = sessionStorage.getItem('eds_bulk_contacts')
+        if(!raw){ alert('Aucun contact importé. Pars le CSV d'abord.') ; return }
+        const contacts = JSON.parse(raw)
+        if(!confirm(`Envoyer ${contacts.length} contacts (soumissions) ?`)) return
+        const iframe = 'netlify-iframe'
+        for(const c of contacts){
+          const f = document.createElement('form')
+          f.method = 'POST'
+          f.enctype = 'multipart/form-data'
+          f.action = '/' 
+          f.target = iframe
+          const hiddenName = document.createElement('input'); hiddenName.name='form-name'; hiddenName.value='eds-contact'; hiddenName.type='hidden'
+          f.appendChild(hiddenName)
+          const inNom = document.createElement('input'); inNom.name='nom'; inNom.type='hidden'; inNom.value = c[0]||''
+          const inPrenom = document.createElement('input'); inPrenom.name='prenom'; inPrenom.type='hidden'; inPrenom.value = c[1]||''
+          const inWhats = document.createElement('input'); inWhats.name='whatsapp'; inWhats.type='hidden'; inWhats.value = c[2]||''
+          f.appendChild(inNom); f.appendChild(inPrenom); f.appendChild(inWhats)
+          document.body.appendChild(f)
+          f.submit()
+          await new Promise(res=>setTimeout(res,500))
+          f.remove()
+        }
+        alert('bulk submissions envoyées (vérifie Netlify forms)')
+      })
+    </script>
+  </body>
+</html>
