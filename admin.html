@@ -1,15 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <title>EDS PROGRAM EBROADCAST - Admin</title>
   <style>
-    body { font-family: Arial, sans-serif; }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    button { margin: 5px; padding: 8px 12px; }
+    button { margin: 5px; padding: 8px 12px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;">Admin - Contacts</h1>
+  <h1>Admin - Contacts</h1>
 
   <div style="text-align:center;">
     <button id="deleteSelected">Supprimer Sélection</button>
@@ -30,10 +33,28 @@
   </table>
 
   <script>
-    let contacts = [
-      {nom:"Jean", prenom:"Pierre", numero:"50912345678"},
-      {nom:"Marie", prenom:"Claude", numero:"50998765432"}
-    ];
+    const CORRECT_PASSWORD = "04004749"; // Mot de passe admin
+    const API_KEY = "nfp_guuy1oVgA3kZQwj2T9dayVxjEyyhbdQHdad4"; // Remplacer par ton API Key Netlify
+    const FORM_ID = "68aeae82b253f900084dc5d4"; // Remplacer par ton Form ID
+
+    let contacts = []; // Tableau qui contiendra les soumissions
+
+    async function fetchContacts() {
+      try {
+        const res = await fetch(`https://api.netlify.com/api/v1/forms/${FORM_ID}/submissions`, {
+          headers: { "Authorization": `Bearer ${API_KEY}` }
+        });
+        const submissions = await res.json();
+        contacts = submissions.map(sub => ({
+          nom: sub.data.nom || "",
+          prenom: sub.data.prenom || "",
+          numero: sub.data.numero || ""
+        }));
+        renderContacts();
+      } catch (err) {
+        console.error("Erreur récupération Netlify:", err);
+      }
+    }
 
     const table = document.getElementById("contactTable");
 
@@ -79,6 +100,8 @@
       URL.revokeObjectURL(url);
     });
 
-    renderContacts();
+    // Récupération des contacts depuis Netlify au chargement
+    fetchContacts();
   </script>
 </body>
+</html>
