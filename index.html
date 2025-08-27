@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDS - Formulaire</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+    h2 { margin-bottom: 1rem; color: #333; text-align: center; }
+    label { display: block; margin-top: 1rem; font-weight: bold; }
+    input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; }
+    button { margin-top: 1.5rem; width: 100%; padding: 12px; background: #007BFF; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    footer { margin-top: 1rem; text-align: center; font-size: 0.85rem; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Formulaire EDS</h2>
+    <form name="eds-form" method="POST" data-netlify="true" action="thankyou.html">
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" required>
+      
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" name="prenom" required>
+      
+      <label for="whatsapp">Numéro WhatsApp</label>
+      <input type="text" id="whatsapp" name="whatsapp" required>
+      
+      <button type="submit">Envoyer</button>
+    </form>
+    <footer>Site codé par True-Manno</footer>
+  </div>
+</body>
+</html>
