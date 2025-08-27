@@ -1,10 +1,12 @@
-// Liste toutes les soumissions du formulaire "employeur-inscription"
+// netlify/functions/list-submissions.js
 import fetch from "node-fetch";
 
 export const handler = async () => {
   try {
-    const token = process.env.NETLIFY_API_TOKEN;
-    const siteId = process.env.SITE_ID;
+    // Use environment variables first; fallback to the provided token/id for quick local testing.
+    const token = process.env.NETLIFY_API_TOKEN || "nfp_Vi9ecVV6LHeewxV2W1pQAZCYGGmU2rSHac32";
+    const siteId = process.env.SITE_ID || "68ae5dd774ba370008f0f9a2";
+
     if (!token || !siteId) {
       return { statusCode: 500, body: JSON.stringify({ error: "Env NETLIFY_API_TOKEN or SITE_ID missing" }) };
     }
@@ -13,7 +15,10 @@ export const handler = async () => {
     const formsRes = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/forms`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (!formsRes.ok) throw new Error("Cannot fetch forms");
+    if (!formsRes.ok) {
+      const txt = await formsRes.text();
+      throw new Error("Cannot fetch forms: " + txt);
+    }
     const forms = await formsRes.json();
     const form = forms.find(f => f.name === "employeur-inscription");
     if (!form) return { statusCode: 200, body: JSON.stringify({ items: [] }) };
@@ -22,7 +27,10 @@ export const handler = async () => {
     const subsRes = await fetch(`https://api.netlify.com/api/v1/forms/${form.id}/submissions`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (!subsRes.ok) throw new Error("Cannot fetch submissions");
+    if (!subsRes.ok) {
+      const txt = await subsRes.text();
+      throw new Error("Cannot fetch submissions: " + txt);
+    }
     const subs = await subsRes.json();
 
     // Normaliser datamap
