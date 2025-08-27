@@ -49,10 +49,11 @@
 </div>
 
 <script>
-const adminPass = "04004749";
-const deletionPass = "04004";
+const adminPass = "04004749"; // Mot de passe admin
+const deletionPass = "04004";  // Mot de passe pour suppression
 let submissions = [];
 
+// Connexion admin et récupération des soumissions
 async function loginAdmin(){
     const pass = document.getElementById("adminPassword").value;
     if(pass !== adminPass){ alert("Mot de passe incorrect !"); return; }
@@ -69,6 +70,7 @@ async function loginAdmin(){
     }
 }
 
+// Affichage du tableau
 function renderTable(){
     const tbody = document.getElementById("tableBody");
     tbody.innerHTML="";
@@ -86,6 +88,7 @@ function renderTable(){
     });
 }
 
+// Supprimer un contact
 function deleteSingle(index){
     const pass = prompt("Mot de passe pour supprimer ce contact:");
     if(pass!==deletionPass){ alert("Mot de passe incorrect ! Suppression refusée."); return; }
@@ -93,10 +96,12 @@ function deleteSingle(index){
     renderTable();
 }
 
+// Sélectionner / désélectionner tous
 function toggleAll(source){
     document.querySelectorAll(".selectCheckbox").forEach(cb=>cb.checked=source.checked);
 }
 
+// Supprimer contacts sélectionnés
 function deleteSelected(){
     const pass = prompt("Mot de passe pour supprimer contacts sélectionnés:");
     if(pass!==deletionPass){ alert("Mot de passe incorrect !"); return; }
@@ -108,6 +113,7 @@ function deleteSelected(){
     renderTable();
 }
 
+// Filtrer le tableau
 function filterTable(){
     const search = document.getElementById("search").value.toLowerCase();
     const tbody=document.getElementById("tableBody");
@@ -128,6 +134,7 @@ function filterTable(){
     });
 }
 
+// Télécharger CSV
 function downloadCSV(){
     if(submissions.length===0){ alert("Aucune soumission à télécharger."); return; }
     let csv="Nom,Prénom,WhatsApp,Date\n";
