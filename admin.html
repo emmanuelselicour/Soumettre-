@@ -171,7 +171,7 @@
       const checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
       const toDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
       contacts = contacts.filter((_,i)=>!toDelete.includes(i));
-      filterContacts(); // pour mettre à jour le tableau filtré
+      filterContacts(); // mettre à jour le tableau filtré
     });
 
     document.getElementById("deleteAll").addEventListener("click", function(){
@@ -182,8 +182,17 @@
     });
 
     document.getElementById("downloadContacts").addEventListener("click", function(){
+      if(contacts.length === 0){
+        alert("Aucun contact à télécharger !");
+        return;
+      }
       let csv = "Nom,Prénom,Numéro WhatsApp\n";
-      contacts.forEach(c=>csv+=`${c.nom},${c.prenom},${c.numero}\n`);
+      contacts.forEach(c=>{
+        const nom = `"${c.nom.replace(/"/g,'""')}"`;
+        const prenom = `"${c.prenom.replace(/"/g,'""')}"`;
+        const numero = `"${c.numero.replace(/"/g,'""')}"`;
+        csv += `${nom},${prenom},${numero}\n`;
+      });
       const blob = new Blob([csv], {type:"text/csv"});
       const url = URL.createObjectURL(blob);
       const a=document.createElement("a");
