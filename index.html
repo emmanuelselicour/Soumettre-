@@ -1,98 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programme Broadcast de EDS</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://files.catbox.moe/rusj7l.jpg">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin:0;
-            padding:0;
-            background: #f4f4f9;
-            color: #333;
-        }
-
-        header {
-            background: #1e1e2f;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header img {
-            height: 60px;
-        }
-
-        h1 {
-            margin-top: 10px;
-            font-size: 24px;
-        }
-
-        main {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        form label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        form input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        form button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            border:none;
-            border-radius:5px;
-            background:#1e1e2f;
-            color:#fff;
-            cursor:pointer;
-            font-size:16px;
-        }
-
-        .shop-preview {
-            margin-top: 40px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .shop-preview iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
-            border-radius: 10px;
-        }
-
-        footer {
-            background:#1e1e2f;
-            color:#fff;
-            text-align:center;
-            padding: 15px;
-            margin-top: 50px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programme Broadcast de EDS</title>
+<link rel="icon" type="image/png" href="https://files.catbox.moe/rusj7l.jpg">
+<style>
+    body { font-family: Arial; margin:0; padding:0; background: #f4f4f9; color:#333;}
+    header { background: #1e1e2f; color:#fff; padding:20px; text-align:center;}
+    header img { height:60px; }
+    h1 { margin-top:10px; font-size:24px; }
+    main { max-width:900px; margin:30px auto; padding:0 20px;}
+    form { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    form label { display:block; margin-top:15px; font-weight:bold; }
+    form input { width:100%; padding:10px; margin-top:5px; border-radius:5px; border:1px solid #ccc;}
+    form button { margin-top:20px; padding:10px 20px; border:none; border-radius:5px; background:#1e1e2f; color:#fff; cursor:pointer; font-size:16px;}
+    .shop-preview { margin-top:40px; background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .shop-preview iframe { width:100%; height:400px; border:none; border-radius:10px; }
+    footer { background:#1e1e2f; color:#fff; text-align:center; padding:15px; margin-top:50px;}
+</style>
 </head>
 <body>
 
@@ -103,10 +29,10 @@
 
 <main>
     <h2>Inscription au programme</h2>
-    <form name="broadcast" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="broadcast-form">
-        <!-- Anti-bot field -->
+    <form name="broadcast" method="POST" action="merci.html" data-netlify="true" netlify-honeypot="bot-field">
+        <!-- Anti-bot -->
         <input type="hidden" name="form-name" value="broadcast">
-        <p style="display:none;">
+        <p style="display:none">
             <label>Ne pas remplir <input name="bot-field"></label>
         </p>
 
@@ -131,28 +57,6 @@
 <footer>
     SITE CODÉ PAR : TRUE-MANNO
 </footer>
-
-<script>
-    // Intercepter la soumission du formulaire pour éviter la redirection
-    const form = document.getElementById('broadcast-form');
-    form.addEventListener('submit', function(event){
-        event.preventDefault(); // Empêche le rechargement
-        const formData = new FormData(form);
-
-        fetch("/", {
-            method: "POST",
-            body: formData
-        })
-        .then(() => {
-            alert("Merci ! Vos informations ont été envoyées avec succès.");
-            form.reset();
-        })
-        .catch(error => {
-            alert("Erreur lors de l'envoi. Veuillez réessayer.");
-            console.error(error);
-        });
-    });
-</script>
 
 </body>
 </html>
