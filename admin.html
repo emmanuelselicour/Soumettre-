@@ -1,231 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Administrateur</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 1rem;
-        }
-        
-        .admin-container {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            width: 100%;
-            max-width: 1000px;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--secondary);
-        }
-        
-        .login-form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-        
-        button {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            width: 100%;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
-        }
-        
-        .submissions {
-            display: none;
-            margin-top: 2rem;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .error {
-            color: red;
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
-        }
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--primary);
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Soumissions</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20rx='14'%20width='64'%20height='64'%20fill='%23f59e0b'/%3E%3Cpath%20d='M18%2046h28M18%2032h28M18%2018h28'%20stroke='white'%20stroke-width='6'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="admin-container">
-        <h1>Espace Administrateur</h1>
-        
-        <div class="login-form" id="loginForm">
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" required>
-            </div>
-            <button onclick="checkPassword()">Se connecter</button>
-            <div class="error" id="errorMessage">Mot de passe incorrect</div>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <div id="gate" class="h-screen grid place-items-center p-6">
+    <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <h1 class="text-xl font-semibold mb-4">Accès Admin</h1>
+      <input id="pw" type="password" placeholder="Mot de passe" class="w-full rounded-xl bg-slate-800 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500">
+      <button id="enter" class="mt-4 w-full px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold">Entrer</button>
+      <p class="text-xs text-slate-400 mt-3">Mot de passe: 04004749</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden max-w-6xl mx-auto p-6">
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <h2 class="text-2xl font-bold">Soumissions</h2>
+      <div class="flex flex-col md:flex-row gap-3">
+        <input id="q" class="rounded-xl bg-slate-900 border border-slate-800 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Recherche par nom ou numéro…">
+        <div class="flex gap-3">
+          <button id="refresh" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700">Rafraîchir</button>
+          <button id="delSelected" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500">Supprimer sélection</button>
+          <button id="download" class="px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500">Télécharger CSV</button>
         </div>
-        
-        <div class="submissions" id="submissionsSection">
-            <h2>Soumissions récentes</h2>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Téléphone</th>
-                        <th>Email</th>
-                        <th>Photo</th>
-                    </tr>
-                </thead>
-                <tbody id="submissionsTable">
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
-            </table>
-            
-            <a href="index.html" class="back-link">Retour au formulaire</a>
-        </div>
+      </div>
+    </header>
+
+    <div class="overflow-auto border border-slate-800 rounded-2xl">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-900 sticky top-0">
+          <tr>
+            <th class="p-3"><input type="checkbox" id="chkAll"></th>
+            <th class="p-3 text-left">Nom</th>
+            <th class="p-3 text-left">Prénom</th>
+            <th class="p-3 text-left">Numéro</th>
+            <th class="p-3 text-left">E-mail</th>
+            <th class="p-3 text-left">Photo</th>
+            <th class="p-3 text-left">Date</th>
+            <th class="p-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
     </div>
 
-    <script>
-        // Mot de passe administrateur
-        const ADMIN_PASSWORD = "04004749";
-        
-        function checkPassword() {
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const loginForm = document.getElementById('loginForm');
-            const submissionsSection = document.getElementById('submissionsSection');
-            
-            if (password === ADMIN_PASSWORD) {
-                loginForm.style.display = 'none';
-                submissionsSection.style.display = 'block';
-                loadSubmissions();
-            } else {
-                errorMessage.style.display = 'block';
-            }
-        }
-        
-        function loadSubmissions() {
-            // Dans un cas réel, on récupérerait les données depuis l'API Netlify
-            // Pour l'exemple, nous allons simuler des données
-            const submissions = [
-                {
-                    nom: "Dupont",
-                    prenom: "Marie",
-                    telephone: "01 23 45 67 89",
-                    email: "marie.dupont@example.com",
-                    photo: "photo1.jpg"
-                },
-                {
-                    nom: "Martin",
-                    prenom: "Pierre",
-                    telephone: "06 12 34 56 78",
-                    email: "pierre.martin@example.com",
-                    photo: "photo2.jpg"
-                }
-            ];
-            
-            const table = document.getElementById('submissionsTable');
-            table.innerHTML = '';
-            
-            submissions.forEach(sub => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${sub.nom}</td>
-                    <td>${sub.prenom}</td>
-                    <td>${sub.telephone}</td>
-                    <td>${sub.email}</td>
-                    <td>${sub.photo}</td>
-                `;
-                table.appendChild(row);
-            });
-        }
-    </script>
+    <p class="text-slate-400 text-xs mt-4">Astuce: Utilise la recherche pour filtrer rapidement par nom/prénom/numéro.</p>
+  </div>
+
+  <script>
+    // --- simple gate ---
+    document.getElementById('enter').onclick = () => {
+      if (document.getElementById('pw').value === '04004749') {
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        loadData();
+      } else alert('Mot de passe incorrect');
+    };
+
+    const state = { list: [], filter: '' };
+
+    async function loadData() {
+      const res = await fetch('/.netlify/functions/list-submissions');
+      const data = await res.json();
+      state.list = data.items || [];
+      render();
+    }
+
+    function render() {
+      const tbody = document.getElementById('rows');
+      const q = state.filter.trim().toLowerCase();
+      const filtered = state.list.filter(it => {
+        const nom = (it.data.nom||'').toLowerCase();
+        const prenom = (it.data.prenom||'').toLowerCase();
+        const numero = (it.data.numero||'').toLowerCase();
+        return nom.includes(q) || prenom.includes(q) || numero.includes(q);
+      });
+
+      tbody.innerHTML = filtered.map(it => {
+        const photoLink = it.data.photo || (it.files && it.files.photo) || '';
+        const d = new Date(it.created_at);
+        const chkId = `chk_${it.id}`;
+        return `
+          <tr class="border-t border-slate-800 hover:bg-slate-900/60">
+            <td class="p-3 align-top"><input type="checkbox" data-id="${it.id}" class="chk"></td>
+            <td class="p-3 align-top">${escapeHtml(it.data.nom||'')}</td>
+            <td class="p-3 align-top">${escapeHtml(it.data.prenom||'')}</td>
+            <td class="p-3 align-top">${escapeHtml(it.data.numero||'')}</td>
+            <td class="p-3 align-top">${escapeHtml(it.data.email||'')}</td>
+            <td class="p-3 align-top">${photoLink ? `<a class="underline" href="${photoLink}" target="_blank">Voir</a>` : '—'}</td>
+            <td class="p-3 align-top">${isNaN(d)?'—':d.toLocaleString()}</td>
+            <td class="p-3 align-top text-right">
+              <button class="px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs" onclick="delOne('${it.id}')">Supprimer</button>
+            </td>
+          </tr>`;
+      }).join('');
+      document.getElementById('chkAll').checked = false;
+    }
+
+    function escapeHtml(s){return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));}
+
+    document.getElementById('refresh').onclick = loadData;
+    document.getElementById('q').oninput = (e)=>{ state.filter = e.target.value; render(); };
+    document.getElementById('chkAll').onchange = (e)=>{
+      document.querySelectorAll('.chk').forEach(c=> c.checked = e.target.checked);
+    };
+
+    async function delOne(id){
+      if(!confirm('Supprimer cette soumission ?')) return;
+      await fetch('/.netlify/functions/delete-submission?id='+encodeURIComponent(id), { method: 'DELETE' });
+      state.list = state.list.filter(x=>x.id!==id);
+      render();
+    }
+    document.getElementById('delSelected').onclick = async ()=>{
+      const ids = [...document.querySelectorAll('.chk')].filter(c=>c.checked).map(c=>c.dataset.id);
+      if(ids.length===0) return alert('Aucune sélection.');
+      if(!confirm('Supprimer '+ids.length+' élément(s) ?')) return;
+      for(const id of ids){
+        await fetch('/.netlify/functions/delete-submission?id='+encodeURIComponent(id), { method: 'DELETE' });
+        state.list = state.list.filter(x=>x.id!==id);
+      }
+      render();
+    };
+
+    // Export CSV (Nom;Prénom;Numéro;Email) — compatible import contacts
+    document.getElementById('download').onclick = ()=>{
+      const rows = [['First Name','Last Name','Phone','E-mail']];
+      const q = state.filter.trim().toLowerCase();
+      const filtered = state.list.filter(it=>{
+        const nom=(it.data.nom||'').toLowerCase();
+        const prenom=(it.data.prenom||'').toLowerCase();
+        const numero=(it.data.numero||'').toLowerCase();
+        return nom.includes(q)||prenom.includes(q)||numero.includes(q);
+      });
+      filtered.forEach(it=>{
+        rows.push([it.data.prenom||'', it.data.nom||'', it.data.numero||'', it.data.email||'']);
+      });
+      const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contacts_programme.csv';
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    };
+  </script>
 </body>
 </html>
