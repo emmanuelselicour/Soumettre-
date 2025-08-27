@@ -1,74 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDS Admin</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDS — Boostez vos vues WhatsApp</title>
+<link rel="icon" href="https://files.catbox.moe/rusj7l.jpg">
+
+
 <style>
-body{font-family:Arial, sans-serif;background:#f4f4f4;margin:0;padding:0;}
-header{background:#fff;padding:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-table{width:90%;margin:20px auto;border-collapse:collapse;}
-th,td{padding:10px;border:1px solid #ccc;text-align:left;}
-input{padding:5px;margin:5px;}
-button{padding:5px 10px;margin:5px;background:#007bff;color:#fff;border:none;border-radius:3px;cursor:pointer;}
-button:hover{background:#0056b3;}
-</style>
-</head>
-<body>
-<header><h2>Admin Panel - EDS</h2></header>
-
-<div style="text-align:center;">
-<input type="text" id="search" placeholder="Rechercher par nom/prénom/numéro">
-<button onclick="searchUser()">Rechercher</button>
-<button onclick="deleteAll()">Supprimer Tous</button>
-</div>
-
-<table id="userTable">
-<thead>
-<tr><th>#</th><th>Nom</th><th>Prénom</th><th>Numéro</th><th>Action</th></tr>
-</thead>
-<tbody></tbody>
-</table>
-
-<script>
-let users = JSON.parse(localStorage.getItem('users') || '[]');
-const tableBody=document.querySelector('#userTable tbody');
-
-function renderUsers(list){
-    tableBody.innerHTML='';
-    list.forEach((u,i)=>{
-        let row=document.createElement('tr');
-        row.innerHTML=`<td>${i+1}</td><td>${u.nom}</td><td>${u.prenom}</td><td>${u.numero}</td>
-        <td><button onclick="deleteUser(${i})">Supprimer</button></td>`;
-        tableBody.appendChild(row);
-    });
+:root{
+--bg:#f6f9fc;
+--card:#ffffff;
+--accent:#0066ff;
+--muted:#64748b;
+--glass: rgba(255,255,255,0.6);
+--blink-duration: 0.11s; /* approx 9 blinks/sec */
+font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#f6f9fc, #eef6ff);color:#0f1724;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+.brand h1{font-size:18px;margin:0}
+.bulbs{display:flex;gap:8px;align-items:center}
+.bulb{width:10px;height:10px;border-radius:50%;background:#ffd;box-shadow:0 0 8px rgba(255,230,120,0.9);opacity:0.25;animation:blink var(--blink-duration) linear infinite}
+/* create 9 bulbs visual */
+.bulb:nth-child(odd){transform:scale(1.1)}
+.bulb:nth-child(1){animation-delay:0s}
+.bulb:nth-child(2){animation-delay:0.02s}
+.bulb:nth-child(3){animation-delay:0.04s}
+.bulb:nth-child(4){animation-delay:0.06s}
+.bulb:nth-child(5){animation-delay:0.08s}
+.bulb:nth-child(6){animation-delay:0.10s}
+.bulb:nth-child(7){animation-delay:0.12s}
+.bulb:nth-child(8){animation-delay:0.14s}
+.bulb:nth-child(9){animation-delay:0.16s}
+@keyframes blink{0%{opacity:0.15;filter:blur(0)}50%{opacity:1;filter:blur(0.6px)}100%{opacity:0.15}}
 
-function deleteUser(index){
-    let pass=prompt("Mot de passe admin pour supprimer :");
-    if(pass==='04004749'){
-        users.splice(index,1);
-        localStorage.setItem('users',JSON.stringify(users));
-        renderUsers(users);
-    } else {alert("Mot de passe incorrect !");}
-}
 
-function deleteAll(){
-    let pass=prompt("Mot de passe admin pour supprimer tous les utilisateurs :");
-    if(pass==='04004749'){
-        users=[];
-        localStorage.setItem('users',JSON.stringify(users));
-        renderUsers(users);
-    } else {alert("Mot de passe incorrect !");}
-}
+main{display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:start;max-width:1100px;margin:12px auto;padding:0 18px;flex:1}
+@media (max-width:900px){main{grid-template-columns:1fr;padding:16px} .right{order:2} .left{order:1}}
 
-function searchUser(){
-    let term=document.getElementById('search').value.toLowerCase();
-    let filtered=users.filter(u=>u.nom.toLowerCase().includes(term) || u.prenom.toLowerCase().includes(term) || u.numero.includes(term));
-    renderUsers(filtered);
-}
 
-renderUsers(users);
-</script>
-</body>
+.card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 6px 20px rgba(8,15,33,0.06)}
+
+
+.hero h2{margin:0 0 12px;font-size:22px}
+.hero p{margin:0 0 18px;color:var(--muted)}
+.features{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:linear-gradient(90deg,#fff,#f8fbff);padding:8px 12px;border-radius:999px;border:1px solid rgba(15,23,36,0.03);font-size:13px}
+
+
+form label{display:block;font-size:13px;margin-bottom:6px;color:#0f1724}
+form input[type="text"], form input[type="tel"], form textarea, form select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef8;background:transparent}
+form input[type="file"]{width:100%}
+.row{display:flex;gap:10px}
+.row .col{flex:1}
+.services{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
+.btn.secondary{background:transparent;border:1px solid rgba(8,12,30,0.06);color:var(--accent)}
+.small{font-size:13px;color:var(--muted)}
+
+
 </html>
