@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>True-Manno • Booster de vues WhatsApp</title>
+  <meta name="description" content="Augmentez vos vues WhatsApp et alimentez votre croissance. Inscriptions rapides + upload de fichiers.">
+  <link rel="icon" href="https://files.catbox.moe/rusj7l.jpg"/>
+  <!-- Open Graph / Link preview for WhatsApp Broadcast -->
+  <meta property="og:title" content="True-Manno • Booster de vues WhatsApp"/>
+  <meta property="og:description" content="Formulaire rapide (Nom, Prénom, WhatsApp), upload de fichiers, suivi en direct. 9 bulbes/sec ✨"/>
+  <meta property="og:image" content="https://files.catbox.moe/rusj7l.jpg"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://example.netlify.app/"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Bubbles/“bulbes” background */
+    .bulb { position: fixed; bottom: -60px; width: 10px; height: 10px; border-radius: 9999px; opacity: .35; filter: blur(0.5px); animation: rise 6s linear forwards; pointer-events:none; }
+    @keyframes rise { to { transform: translateY(-120vh) scale(1.4); opacity:.05; } }
+    /* Glass card look */
+    .glass { background: rgba(255,255,255,.7); backdrop-filter: blur(8px); }
+    .soft-shadow { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    /* Simple pulse for “9 bulbes/sec” */
+    .pulse { animation: pulse 1.6s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 relative">
+  <!-- Floating bulbs container -->
+  <div id="bulbs" aria-hidden="true"></div>
+
+  <header class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="https://files.catbox.moe/rusj7l.jpg" alt="Logo True-Manno" class="w-10 h-10 rounded-xl ring-2 ring-white/20"/>
+      <h1 class="text-xl md:text-2xl font-semibold tracking-tight">True-Manno</h1>
+    </div>
+    <nav class="flex items-center gap-2 md:gap-3">
+      <a href="https://easy-deal-shop.netlify.app/" target="_blank" rel="noopener" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 soft-shadow">Visiter notre boutique</a>
+      <a href="admin.html" class="px-4 py-2 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-slate-900 font-semibold soft-shadow">Admin</a>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4">
+    <!-- HERO -->
+    <section class="grid md:grid-cols-2 gap-6 md:gap-10 items-center mt-4 md:mt-10">
+      <div class="space-y-5">
+        <div class="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-indigo-400/10 ring-1 ring-indigo-300/20 text-indigo-200 text-xs">
+          <span class="w-2 h-2 bg-indigo-300 rounded-full animate-ping"></span>
+          9 bulbes/sec • design moderne • Netlify Forms
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight">Boostez vos <span class="text-indigo-300">vues WhatsApp</span> et attirez plus de clients</h2>
+        <p class="text-slate-300">Programme simple pour entreprises: plus de vues, plus de prospects—sans trop forcer. Ajoutez vos infos, chargez un fichier de contacts, et c’est parti.</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="#inscription" class="px-5 py-3 rounded-2xl bg-white text-slate-900 font-semibold soft-shadow">Commencer maintenant</a>
+          <a href="https://easy-deal-shop.netlify.app/" target="_blank" rel="noopener" class="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 soft-shadow">Boutique en ligne</a>
+        </div>
+        <!-- “Broadcast preview” card (for visual on share) -->
+        <div class="glass soft-shadow rounded-3xl p-4 mt-4 max-w-md">
+          <div class="flex gap-3">
+            <img src="https://files.catbox.moe/rusj7l.jpg" class="w-12 h-12 rounded-xl" alt="logo"/>
+            <div>
+              <div class="font-semibold text-slate-900">True-Manno • Booster WhatsApp</div>
+              <div class="text-sm text-slate-700">Formulaire rapide + upload. 9 bulbes/sec ✨</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FORM -->
+      <div id="inscription" class="glass soft-shadow rounded-3xl p-6 md:p-8">
+        <h3 class="text-xl font-semibold text-slate-900 mb-4">Inscription rapide</h3>
+        <form name="inscriptions" method="POST" action="/thank-you.html" data-netlify="true" data-netlify-honeypot="bot-field" enctype="multipart/form-data" class="space-y-4" id="lead-form">
+          <input type="hidden" name="form-name" value="inscriptions">
+          <p class="hidden"><label>Ne pas remplir: <input name="bot-field"></label></p>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-700 mb-1">Nom</label>
+              <input required name="nom" type="text" class="w-full rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none"/>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-700 mb-1">Prénom</label>
+              <input required name="prenom" type="text" class="w-full rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-slate-700 mb-1">Numéro WhatsApp (avec indicatif)</label>
+            <div class="relative">
+              <input required name="numero" id="numero" inputmode="tel" placeholder="+509XXXXXXXX" class="w-full rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none pr-28"/>
+              <span id="numeroBadge" class="absolute inset-y-0 right-2 my-auto text-xs px-2 py-1 rounded-xl bg-slate-800/80 text-white hidden"></span>
+            </div>
+            <p id="dupeMsg" class="text-sm mt-2 hidden"></p>
+          </div>
+
+          <div>
+            <label class="block text-sm text-slate-700 mb-1">Fichiers (CSV/VCF/Excel/Images) — multiples</label>
+            <input name="attachments" type="file" multiple class="w-full rounded-2xl px-4 py-3 bg-white/80 ring-1 ring-slate-200 text-slate-900 focus:outline-none"/>
+            <p class="text-xs text-slate-600 mt-1">Vous pourrez ensuite retrouver ces fichiers dans Netlify &gt; Forms &gt; Submissions.</p>
+          </div>
+
+          <button id="submitBtn" class="w-full px-5 py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-slate-900 font-semibold soft-shadow">Envoyer</button>
+          <p class="text-xs text-slate-600">En soumettant, vous acceptez que vos données soient utilisées pour vous recontacter. <strong>Note:</strong> respect des CGU des plateformes (WhatsApp/Meta, Instagram, etc.).</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- MARKETING -->
+    <section class="mt-14 md:mt-20">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-6 soft-shadow">
+          <h4 class="text-lg font-semibold text-indigo-200">Vues WhatsApp garanties*</h4>
+          <p class="text-slate-300 mt-2">Mise en avant ciblée pour vos status & diffusions. *Nous travaillons la portée organique & la notoriété—sans spam.</p>
+        </div>
+        <div class="glass rounded-3xl p-6 soft-shadow">
+          <h4 class="text-lg font-semibold text-indigo-200">Abonnements & followers</h4>
+          <p class="text-slate-300 mt-2">Boost de visibilité pour IG, Facebook, TikTok & plus. <span class="text-slate-400 text-sm">Toujours dans le respect des règles locales & des plateformes.</span></p>
+        </div>
+        <div class="glass rounded-3xl p-6 soft-shadow">
+          <h4 class="text-lg font-semibold text-indigo-200">Diamants & abonnements</h4>
+          <p class="text-slate-300 mt-2">Diamants Free Fire, Netflix, et autres offres numériques fiables. Support 7j/7.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-slate-400">
+    <div class="text-sm">Visitez aussi notre boutique: <a class="underline" href="https://easy-deal-shop.netlify.app/" target="_blank" rel="noopener">https://easy-deal-shop.netlify.app/</a></div>
+    <div class="mt-2">© <span id="year"></span> • Site codé par <strong>True-Manno</strong></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Config (exposée côté client — attention sécurité) =====
+    const SITE_ID = "68ae6ed558338b00088302f7";
+    const NETLIFY_TOKEN = "nfp_15mLDnoA46wB94Bk8CP1irt7rHD2tYya7f29";
+    const FORM_NAME = "inscriptions";
+
+    // ===== 9 “bulbes” / seconde =====
+    const bulbsEl = document.getElementById('bulbs');
+    function spawnBulb() {
+      const b = document.createElement('span');
+      b.className = 'bulb';
+      const size = 6 + Math.random()*10;
+      b.style.width = size+'px'; b.style.height = size+'px';
+      b.style.left = Math.random()*100 + 'vw';
+      b.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,255,255,.1))';
+      bulbsEl.appendChild(b);
+      setTimeout(()=>b.remove(), 6500);
+    }
+    setInterval(()=>{ for(let i=0;i<9;i++) spawnBulb(); }, 1000); // 9 bulbes/sec
+
+    // ===== Duplicate check for numero (Netlify API) =====
+    const numeroInput = document.getElementById('numero');
+    const dupeMsg = document.getElementById('dupeMsg');
+    const numeroBadge = document.getElementById('numeroBadge');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function normalizePhone(v) {
+      return (v||'').replace(/\s+/g,'').replace(/[^+\d]/g,'').replace(/^00/,'+');
+    }
+
+    async function getFormId() {
+      const r = await fetch(`https://api.netlify.com/api/v1/sites/${SITE_ID}/forms`, {
+        headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }
+      });
+      const forms = await r.json();
+      const f = forms.find(x => x.name === FORM_NAME);
+      return f ? f.id : null;
+    }
+
+    async function numeroExists(num) {
+      try {
+        const formId = await getFormId();
+        if (!formId) return false;
+        const r = await fetch(`https://api.netlify.com/api/v1/forms/${formId}/submissions?per_page=1000`, {
+          headers: { 'Authorization': `Bearer ${NETLIFY_TOKEN}` }
+        });
+        const subs = await r.json();
+        const n = normalizePhone(num);
+        return subs.some(s => normalizePhone((s.data && (s.data.numero||s.data.Numero||s.data.whatsapp))||'') === n);
+      } catch(e) {
+        console.warn('Dupe check error', e);
+        return false;
+      }
+    }
+
+    numeroInput.addEventListener('blur', async () => {
+      const n = normalizePhone(numeroInput.value);
+      if (!n) return;
+      numeroBadge.classList.remove('hidden');
+      numeroBadge.textContent = '…';
+      const exists = await numeroExists(n);
+      if (exists) {
+        dupeMsg.className = 'text-sm mt-2 text-rose-300';
+        dupeMsg.textContent = 'Ce numéro existe déjà. Veuillez utiliser un autre numéro WhatsApp.';
+        numeroBadge.textContent = 'Doublon';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-60');
+      } else {
+        dupeMsg.className = 'text-sm mt-2 text-emerald-300';
+        dupeMsg.textContent = 'Numéro disponible ✔';
+        numeroBadge.textContent = 'OK';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60');
+      }
+    });
+
+    // Format live
+    numeroInput.addEventListener('input', () => {
+      const cur = numeroInput.selectionStart;
+      numeroInput.value = normalizePhone(numeroInput.value);
+      numeroInput.setSelectionRange(cur, cur);
+    });
+  </script>
+</body>
+</html>
