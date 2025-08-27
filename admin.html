@@ -1,155 +1,149 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin — Soumissions</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20rx='14'%20width='64'%20height='64'%20fill='%23f59e0b'/%3E%3Cpath%20d='M18%2046h28M18%2032h28M18%2018h28'%20stroke='white'%20stroke-width='6'/%3E%3C/svg%3E">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panneau Admin - Soumissions</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1828/1828778.png">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-100">
-  <div id="gate" class="h-screen grid place-items-center p-6">
-    <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-2xl p-6">
-      <h1 class="text-xl font-semibold mb-4">Accès Admin</h1>
-      <input id="pw" type="password" placeholder="Mot de passe" class="w-full rounded-xl bg-slate-800 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500">
-      <button id="enter" class="mt-4 w-full px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold">Entrer</button>
-      <p class="text-xs text-slate-400 mt-3">Mot de passe: 04004749</p>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Mot de passe -->
+  <div id="loginScreen" class="h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96 text-center">
+      <h1 class="text-2xl font-bold mb-4">Connexion Admin</h1>
+      <input id="password" type="password" placeholder="Mot de passe"
+             class="border p-2 w-full rounded mb-3" />
+      <button onclick="login()"
+              class="bg-blue-600 text-white px-4 py-2 rounded w-full">Se connecter</button>
+      <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden">Mot de passe incorrect</p>
     </div>
   </div>
 
-  <div id="app" class="hidden max-w-6xl mx-auto p-6">
-    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-      <h2 class="text-2xl font-bold">Soumissions</h2>
-      <div class="flex flex-col md:flex-row gap-3">
-        <input id="q" class="rounded-xl bg-slate-900 border border-slate-800 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Recherche par nom ou numéro…">
-        <div class="flex gap-3">
-          <button id="refresh" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700">Rafraîchir</button>
-          <button id="delSelected" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500">Supprimer sélection</button>
-          <button id="download" class="px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500">Télécharger CSV</button>
-        </div>
-      </div>
-    </header>
+  <!-- Panel -->
+  <div id="adminPanel" class="hidden p-6">
+    <h2 class="text-2xl font-bold mb-4">📋 Liste des soumissions</h2>
 
-    <div class="overflow-auto border border-slate-800 rounded-2xl">
-      <table class="w-full text-sm">
-        <thead class="bg-slate-900 sticky top-0">
-          <tr>
-            <th class="p-3"><input type="checkbox" id="chkAll"></th>
-            <th class="p-3 text-left">Nom</th>
-            <th class="p-3 text-left">Prénom</th>
-            <th class="p-3 text-left">Numéro</th>
-            <th class="p-3 text-left">E-mail</th>
-            <th class="p-3 text-left">Photo</th>
-            <th class="p-3 text-left">Date</th>
-            <th class="p-3 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <!-- Barre outils -->
+    <div class="flex gap-2 mb-4">
+      <input id="searchInput" type="text" placeholder="Rechercher par nom ou numéro"
+             class="border p-2 rounded flex-1">
+      <button onclick="downloadCSV()"
+              class="bg-green-600 text-white px-3 py-2 rounded">Télécharger CSV</button>
+      <button onclick="deleteSelected()"
+              class="bg-red-600 text-white px-3 py-2 rounded">Supprimer sélection</button>
     </div>
 
-    <p class="text-slate-400 text-xs mt-4">Astuce: Utilise la recherche pour filtrer rapidement par nom/prénom/numéro.</p>
+    <!-- Tableau -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+      <table id="submissionsTable" class="w-full border-collapse">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border"><input type="checkbox" id="selectAll"></th>
+            <th class="p-2 border">Nom & Prénom</th>
+            <th class="p-2 border">Numéro</th>
+            <th class="p-2 border">Email</th>
+            <th class="p-2 border">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5" class="p-3 text-center">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
-    // --- simple gate ---
-    document.getElementById('enter').onclick = () => {
-      if (document.getElementById('pw').value === '04004749') {
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-        loadData();
-      } else alert('Mot de passe incorrect');
-    };
+    const ADMIN_PASSWORD = "04004749";
 
-    const state = { list: [], filter: '' };
-
-    async function loadData() {
-      const res = await fetch('/.netlify/functions/list-submissions');
-      const data = await res.json();
-      state.list = data.items || [];
-      render();
-    }
-
-    function render() {
-      const tbody = document.getElementById('rows');
-      const q = state.filter.trim().toLowerCase();
-      const filtered = state.list.filter(it => {
-        const nom = (it.data.nom||'').toLowerCase();
-        const prenom = (it.data.prenom||'').toLowerCase();
-        const numero = (it.data.numero||'').toLowerCase();
-        return nom.includes(q) || prenom.includes(q) || numero.includes(q);
-      });
-
-      tbody.innerHTML = filtered.map(it => {
-        const photoLink = it.data.photo || (it.files && it.files.photo) || '';
-        const d = new Date(it.created_at);
-        const chkId = `chk_${it.id}`;
-        return `
-          <tr class="border-t border-slate-800 hover:bg-slate-900/60">
-            <td class="p-3 align-top"><input type="checkbox" data-id="${it.id}" class="chk"></td>
-            <td class="p-3 align-top">${escapeHtml(it.data.nom||'')}</td>
-            <td class="p-3 align-top">${escapeHtml(it.data.prenom||'')}</td>
-            <td class="p-3 align-top">${escapeHtml(it.data.numero||'')}</td>
-            <td class="p-3 align-top">${escapeHtml(it.data.email||'')}</td>
-            <td class="p-3 align-top">${photoLink ? `<a class="underline" href="${photoLink}" target="_blank">Voir</a>` : '—'}</td>
-            <td class="p-3 align-top">${isNaN(d)?'—':d.toLocaleString()}</td>
-            <td class="p-3 align-top text-right">
-              <button class="px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs" onclick="delOne('${it.id}')">Supprimer</button>
-            </td>
-          </tr>`;
-      }).join('');
-      document.getElementById('chkAll').checked = false;
-    }
-
-    function escapeHtml(s){return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));}
-
-    document.getElementById('refresh').onclick = loadData;
-    document.getElementById('q').oninput = (e)=>{ state.filter = e.target.value; render(); };
-    document.getElementById('chkAll').onchange = (e)=>{
-      document.querySelectorAll('.chk').forEach(c=> c.checked = e.target.checked);
-    };
-
-    async function delOne(id){
-      if(!confirm('Supprimer cette soumission ?')) return;
-      await fetch('/.netlify/functions/delete-submission?id='+encodeURIComponent(id), { method: 'DELETE' });
-      state.list = state.list.filter(x=>x.id!==id);
-      render();
-    }
-    document.getElementById('delSelected').onclick = async ()=>{
-      const ids = [...document.querySelectorAll('.chk')].filter(c=>c.checked).map(c=>c.dataset.id);
-      if(ids.length===0) return alert('Aucune sélection.');
-      if(!confirm('Supprimer '+ids.length+' élément(s) ?')) return;
-      for(const id of ids){
-        await fetch('/.netlify/functions/delete-submission?id='+encodeURIComponent(id), { method: 'DELETE' });
-        state.list = state.list.filter(x=>x.id!==id);
+    function login() {
+      const pwd = document.getElementById("password").value;
+      if (pwd === ADMIN_PASSWORD) {
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        fetchSubmissions();
+      } else {
+        document.getElementById("errorMsg").classList.remove("hidden");
       }
-      render();
-    };
+    }
 
-    // Export CSV (Nom;Prénom;Numéro;Email) — compatible import contacts
-    document.getElementById('download').onclick = ()=>{
-      const rows = [['First Name','Last Name','Phone','E-mail']];
-      const q = state.filter.trim().toLowerCase();
-      const filtered = state.list.filter(it=>{
-        const nom=(it.data.nom||'').toLowerCase();
-        const prenom=(it.data.prenom||'').toLowerCase();
-        const numero=(it.data.numero||'').toLowerCase();
-        return nom.includes(q)||prenom.includes(q)||numero.includes(q);
+    async function fetchSubmissions() {
+      try {
+        const res = await fetch("/.netlify/functions/list-submissions");
+        const data = await res.json();
+
+        const tbody = document.querySelector("#submissionsTable tbody");
+        tbody.innerHTML = "";
+
+        if (data && Array.isArray(data)) {
+          data.forEach((s, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td class="border p-2 text-center"><input type="checkbox" class="rowCheckbox"></td>
+              <td class="border p-2">${s.data["Nom"] || ""} ${s.data["Prénom"] || ""}</td>
+              <td class="border p-2">${s.data["Numéro"] || ""}</td>
+              <td class="border p-2">${s.data["email"] || ""}</td>
+              <td class="border p-2">
+                <button onclick="deleteOne(${index})"
+                        class="bg-red-500 text-white px-2 py-1 rounded text-sm">Supprimer</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center">Aucune soumission trouvée</td></tr>`;
+        }
+      } catch (err) {
+        console.error("Erreur :", err);
+      }
+    }
+
+    // Recherche
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const value = this.value.toLowerCase();
+      document.querySelectorAll("#submissionsTable tbody tr").forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
       });
-      filtered.forEach(it=>{
-        rows.push([it.data.prenom||'', it.data.nom||'', it.data.numero||'', it.data.email||'']);
+    });
+
+    // Télécharger CSV
+    function downloadCSV() {
+      const rows = [["Nom Prénom", "Numéro", "Email"]];
+      document.querySelectorAll("#submissionsTable tbody tr").forEach(tr => {
+        const cols = tr.querySelectorAll("td");
+        if (cols.length >= 4) {
+          rows.push([
+            cols[1].innerText.trim(),
+            cols[2].innerText.trim(),
+            cols[3].innerText.trim()
+          ]);
+        }
       });
-      const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'contacts_programme.csv';
-      document.body.appendChild(a);
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
-    };
+
+      let csvContent = rows.map(e => e.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "soumissions.csv";
+      link.click();
+    }
+
+    // Suppression placeholders
+    function deleteOne(index) {
+      alert("🚧 Suppression d’une seule entrée (API à brancher)");
+    }
+
+    function deleteSelected() {
+      alert("🚧 Suppression multiple (API à brancher)");
+    }
+
+    // Sélection globale
+    document.addEventListener("change", (e) => {
+      if (e.target.id === "selectAll") {
+        document.querySelectorAll(".rowCheckbox").forEach(cb => cb.checked = e.target.checked);
+      }
+    });
   </script>
 </body>
 </html>
