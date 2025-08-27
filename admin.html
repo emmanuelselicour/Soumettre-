@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin - EDS Broadcast</title>
 <style>
-    body { font-family: Arial; background: #f4f4f9; margin:0; padding:0; }
-    .login-container, .admin-container { max-width:900px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+    body { font-family: Arial; background:#f4f4f9; margin:0; padding:0;}
+    .login-container, .admin-container { max-width:900px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
     input[type="password"], input[type="text"] { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
-    button { padding:10px 20px; border:none; border-radius:5px; background:#1e1e2f; color:#fff; cursor:pointer; margin-right:10px; }
+    button { padding:10px 20px; border:none; border-radius:5px; background:#1e1e2f; color:#fff; cursor:pointer; margin-right:10px;}
     table { width:100%; border-collapse: collapse; margin-top:20px; }
     th, td { padding:10px; border:1px solid #ccc; text-align:left; }
     th { background:#1e1e2f; color:#fff; }
@@ -37,6 +37,7 @@
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>WhatsApp</th>
+                <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -50,7 +51,7 @@
 <script>
 const adminPass = "04004749";
 const deletionPass = "04004";
-let submissions = []; // données récupérées depuis submissions.json ou API
+let submissions = [];
 
 async function loginAdmin(){
     const pass = document.getElementById("adminPassword").value;
@@ -58,9 +59,8 @@ async function loginAdmin(){
     document.getElementById("loginContainer").style.display="none";
     document.getElementById("adminContainer").style.display="block";
 
-    // Récupérer les soumissions depuis un fichier JSON ou API
     try{
-        const res = await fetch("submissions.json"); // créer un fichier submissions.json depuis l'export Netlify CSV → JSON
+        const res = await fetch("/.netlify/functions/getSubmissions");
         submissions = await res.json();
         renderTable();
     } catch(err){
@@ -79,6 +79,7 @@ function renderTable(){
             <td>${s.nom}</td>
             <td>${s.prenom}</td>
             <td>${s.whatsapp}</td>
+            <td>${new Date(s.submitted_at).toLocaleString()}</td>
             <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
         `;
         tbody.appendChild(row);
@@ -119,6 +120,7 @@ function filterTable(){
                 <td>${s.nom}</td>
                 <td>${s.prenom}</td>
                 <td>${s.whatsapp}</td>
+                <td>${new Date(s.submitted_at).toLocaleString()}</td>
                 <td><button onclick="deleteSingle(${index})">Supprimer</button></td>
             `;
             tbody.appendChild(row);
@@ -126,11 +128,10 @@ function filterTable(){
     });
 }
 
-// Générer CSV pour téléchargement
 function downloadCSV(){
     if(submissions.length===0){ alert("Aucune soumission à télécharger."); return; }
-    let csv="Nom,Prénom,WhatsApp\n";
-    submissions.forEach(s=>{ csv+=`${s.nom},${s.prenom},${s.whatsapp}\n`; });
+    let csv="Nom,Prénom,WhatsApp,Date\n";
+    submissions.forEach(s=>{ csv+=`${s.nom},${s.prenom},${s.whatsapp},${s.submitted_at}\n`; });
     const blob = new Blob([csv], {type:"text/csv"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
