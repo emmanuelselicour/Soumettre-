@@ -1,74 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDS Admin</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDS — Admin</title>
+<link rel="icon" href="https://files.catbox.moe/rusj7l.jpg">
 <style>
-body{font-family:Arial, sans-serif;background:#f4f4f4;margin:0;padding:0;}
-header{background:#fff;padding:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-table{width:90%;margin:20px auto;border-collapse:collapse;}
-th,td{padding:10px;border:1px solid #ccc;text-align:left;}
-input{padding:5px;margin:5px;}
-button{padding:5px 10px;margin:5px;background:#007bff;color:#fff;border:none;border-radius:3px;cursor:pointer;}
-button:hover{background:#0056b3;}
+:root{--bg:#f6f9fc;--accent:#0066ff}
+*{box-sizing:border-box}
+body{font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:var(--bg);margin:0;padding:20px}
+.card{background:white;padding:16px;border-radius:12px;box-shadow:0 6px 20px rgba(8,15,33,0.06)}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+input[type=password]{padding:8px;border-radius:8px;border:1px solid #e6eef8}
+button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white}
+.controls{display:flex;gap:8px;align-items:center}
+.table{width:100%;border-collapse:collapse;margin-top:12px}
+.table th,.table td{padding:8px;border-bottom:1px solid #eef6ff;text-align:left}
+.muted{color:#64748b;font-size:13px}
+.small{font-size:13px}
+.hidden{display:none}
 </style>
 </head>
 <body>
-<header><h2>Admin Panel - EDS</h2></header>
 
-<div style="text-align:center;">
-<input type="text" id="search" placeholder="Rechercher par nom/prénom/numéro">
-<button onclick="searchUser()">Rechercher</button>
-<button onclick="deleteAll()">Supprimer Tous</button>
+
+<div class="card">
+<div class="top">
+<div>
+<h2 style="margin:0">Admin EDS</h2>
+<div class="muted">Gérer les inscriptions / fichiers / contacts</div>
 </div>
 
-<table id="userTable">
-<thead>
-<tr><th>#</th><th>Nom</th><th>Prénom</th><th>Numéro</th><th>Action</th></tr>
-</thead>
-<tbody></tbody>
-</table>
 
-<script>
-let users = JSON.parse(localStorage.getItem('users') || '[]');
-const tableBody=document.querySelector('#userTable tbody');
+<div style="display:flex;gap:8px;align-items:center">
+<label for="admin-pass" class="small muted">Mot de passe admin</label>
+<div style="position:relative">
+<input id="admin-pass" type="password" placeholder="••••••••" aria-label="password">
+<button id="eye-btn" style="position:absolute;right:4px;top:4px;padding:4px;background:transparent;border:none;cursor:pointer">👁️</button>
+</div>
+<button id="login-btn">Se connecter</button>
+</div>
+</div>
 
-function renderUsers(list){
-    tableBody.innerHTML='';
-    list.forEach((u,i)=>{
-        let row=document.createElement('tr');
-        row.innerHTML=`<td>${i+1}</td><td>${u.nom}</td><td>${u.prenom}</td><td>${u.numero}</td>
-        <td><button onclick="deleteUser(${i})">Supprimer</button></td>`;
-        tableBody.appendChild(row);
-    });
-}
-
-function deleteUser(index){
-    let pass=prompt("Mot de passe admin pour supprimer :");
-    if(pass==='04004749'){
-        users.splice(index,1);
-        localStorage.setItem('users',JSON.stringify(users));
-        renderUsers(users);
-    } else {alert("Mot de passe incorrect !");}
-}
-
-function deleteAll(){
-    let pass=prompt("Mot de passe admin pour supprimer tous les utilisateurs :");
-    if(pass==='04004749'){
-        users=[];
-        localStorage.setItem('users',JSON.stringify(users));
-        renderUsers(users);
-    } else {alert("Mot de passe incorrect !");}
-}
-
-function searchUser(){
-    let term=document.getElementById('search').value.toLowerCase();
-    let filtered=users.filter(u=>u.nom.toLowerCase().includes(term) || u.prenom.toLowerCase().includes(term) || u.numero.includes(term));
-    renderUsers(filtered);
-}
-
-renderUsers(users);
-</script>
-</body>
-</html>
