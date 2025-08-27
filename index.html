@@ -1,82 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDS PROGRAM EBROADCAST</title>
+  <!-- 🔗 Favicon -->
+  <link rel="icon" type="image/jpeg" href="https://files.catbox.moe/rusj7l.jpg">
   <style>
-    body { font-family: Arial, sans-serif; }
-    .search-box {
-      margin: 15px auto;
-      text-align: center;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      padding: 20px;
     }
-    .search-box input {
-      padding: 8px;
-      width: 250px;
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+      width: 360px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+    h2 { margin-bottom: 15px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background: #34495e; }
+    .about, .shop {
+      max-width: 600px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .shop img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+    a.btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #27ae60;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    a.btn:hover { background: #2ecc71; }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;">EDS PROGRAM EBROADCAST</h1>
-
-  <!-- Formulaire d'inscription -->
-  <form id="contactForm">
-    <label>Nom :</label><br>
-    <input type="text" name="nom" required><br><br>
-
-    <label>Prénom :</label><br>
-    <input type="text" name="prenom" required><br><br>
-
-    <label>Numéro WhatsApp :</label><br>
-    <input type="text" name="numero" required><br><br>
-
-    <button type="submit">Envoyer</button>
-  </form>
-
-  <!-- Recherche de contact -->
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Rechercher un contact...">
+  <div class="container">
+    <!-- 🔗 Logo -->
+    <img src="https://files.catbox.moe/rusj7l.jpg" alt="Logo" class="logo">
+    
+    <h2>Inscription</h2>
+    <form name="contact" method="POST" data-netlify="true" action="/merci.html">
+      <input type="hidden" name="form-name" value="contact">
+      <input type="text" name="nom" placeholder="Nom" required>
+      <input type="text" name="prenom" placeholder="Prénom" required>
+      <input type="tel" name="numero" placeholder="Numéro WhatsApp" required>
+      <button type="submit">Envoyer</button>
+    </form>
   </div>
 
-  <!-- Liste des contacts -->
-  <ul id="contactsList"></ul>
+  <!-- 🔹 Présentation -->
+  <div class="about">
+    <h2>📢 Pourquoi EDS PROGRAM EBROADCAST ?</h2>
+    <p>
+      Ce programme a été conçu pour <strong>aider les entrepreneurs, commerçants et créateurs</strong> 
+      à booster leur visibilité sur WhatsApp.  
+      Grâce à notre système, vous pouvez atteindre plus de personnes et augmenter vos ventes en ligne.
+    </p>
+  </div>
 
-  <script>
-    const form = document.getElementById("contactForm");
-    const contactsList = document.getElementById("contactsList");
-    const searchInput = document.getElementById("searchInput");
-    let contacts = [];
-
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const nom = form.nom.value.trim();
-      const prenom = form.prenom.value.trim();
-      const numero = form.numero.value.trim();
-
-      if(nom && prenom && numero){
-        const contact = { nom, prenom, numero };
-        contacts.push(contact);
-        displayContacts(contacts);
-        form.reset();
-      }
-    });
-
-    function displayContacts(list){
-      contactsList.innerHTML = "";
-      list.forEach((c, i) => {
-        const li = document.createElement("li");
-        li.textContent = `${c.nom} ${c.prenom} - ${c.numero}`;
-        contactsList.appendChild(li);
-      });
-    }
-
-    searchInput.addEventListener("input", function(){
-      const value = this.value.toLowerCase();
-      const filtered = contacts.filter(c => 
-        c.nom.toLowerCase().includes(value) || 
-        c.prenom.toLowerCase().includes(value) || 
-        c.numero.includes(value)
-      );
-      displayContacts(filtered);
-    });
-  </script>
+  <!-- 🔹 Mini Boutique -->
+  <div class="shop">
+    <h2>🛍️ Découvrez notre Mini-Boutique</h2>
+    <p>Visitez notre boutique en ligne pour profiter de nos offres exclusives :</p>
+    <a href="https://easy-deal-shop.netlify.app/" target="_blank" class="btn">Visiter la Boutique</a>
+    <!-- 🔗 Visuel de la boutique -->
+    <img src="https://i.postimg.cc/65GzmjvL/shop-preview.png" alt="Mini Boutique">
+  </div>
 </body>
+</html>
